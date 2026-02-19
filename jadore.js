@@ -15,10 +15,11 @@ let jadoreState = {
   heuresMenage: 5,
   tarifMenageHTVA: 35,
   fraisGestionPourcent: 18,
+  tauxRemplissage: 65,
   prixPoche: {
-    bs: { weekend: 1500, longweekend: 1800, midweek: 1500, semaine: 2500 },
-    ms: { weekend: 1800, longweekend: 2200, midweek: 1600, semaine: 3000 },
-    hs: { weekend: 2000, longweekend: 2500, midweek: 2000, semaine: 3500 }
+    bs: { weekend: 1500, midweek: 1500, semaine: 2500 },
+    ms: { weekend: 1800, midweek: 1600, semaine: 3000 },
+    hs: { weekend: 2000, midweek: 2000, semaine: 3500 }
   },
   resultats: null
 };
@@ -32,7 +33,6 @@ const SAISONS = {
 
 const TYPES_SEJOUR = {
   weekend: 'Week-end',
-  longweekend: 'Long weekend',
   midweek: 'Midweek',
   semaine: 'Semaine'
 };
@@ -67,6 +67,7 @@ function saveToStorage() {
     heuresMenage: jadoreState.heuresMenage,
     tarifMenageHTVA: jadoreState.tarifMenageHTVA,
     fraisGestionPourcent: jadoreState.fraisGestionPourcent,
+    tauxRemplissage: jadoreState.tauxRemplissage,
     prixPoche: jadoreState.prixPoche
   }));
 }
@@ -77,10 +78,11 @@ function updateFormFromState() {
   document.getElementById('jadore-heures-menage').value = jadoreState.heuresMenage;
   document.getElementById('jadore-tarif-menage').value = jadoreState.tarifMenageHTVA;
   document.getElementById('jadore-frais-gestion').value = jadoreState.fraisGestionPourcent;
+  document.getElementById('jadore-taux-remplissage').value = jadoreState.tauxRemplissage;
+  document.getElementById('jadore-taux-remplissage-input').value = jadoreState.tauxRemplissage;
 
   ['bs', 'ms', 'hs'].forEach(saison => {
     document.getElementById(`jadore-${saison}-weekend`).value = jadoreState.prixPoche[saison].weekend;
-    document.getElementById(`jadore-${saison}-longweekend`).value = jadoreState.prixPoche[saison].longweekend;
     document.getElementById(`jadore-${saison}-midweek`).value = jadoreState.prixPoche[saison].midweek;
     document.getElementById(`jadore-${saison}-semaine`).value = jadoreState.prixPoche[saison].semaine;
   });
@@ -94,10 +96,10 @@ function readFormValues() {
   jadoreState.heuresMenage = parseFloat(document.getElementById('jadore-heures-menage').value) || 0;
   jadoreState.tarifMenageHTVA = parseFloat(document.getElementById('jadore-tarif-menage').value) || 0;
   jadoreState.fraisGestionPourcent = parseFloat(document.getElementById('jadore-frais-gestion').value) || 0;
+  jadoreState.tauxRemplissage = parseFloat(document.getElementById('jadore-taux-remplissage').value) || 65;
 
   ['bs', 'ms', 'hs'].forEach(saison => {
     jadoreState.prixPoche[saison].weekend = parseFloat(document.getElementById(`jadore-${saison}-weekend`).value) || 0;
-    jadoreState.prixPoche[saison].longweekend = parseFloat(document.getElementById(`jadore-${saison}-longweekend`).value) || 0;
     jadoreState.prixPoche[saison].midweek = parseFloat(document.getElementById(`jadore-${saison}-midweek`).value) || 0;
     jadoreState.prixPoche[saison].semaine = parseFloat(document.getElementById(`jadore-${saison}-semaine`).value) || 0;
   });
@@ -145,13 +147,41 @@ function initializeEventListeners() {
 
   // Écouteurs pour les champs de prix
   ['bs', 'ms', 'hs'].forEach(saison => {
-    ['weekend', 'longweekend', 'midweek', 'semaine'].forEach(type => {
+    ['weekend', 'midweek', 'semaine'].forEach(type => {
       document.getElementById(`jadore-${saison}-${type}`).addEventListener('change', () => {
         readFormValues();
         saveToStorage();
         calculer();
       });
     });
+  });
+
+  // Slider taux de remplissage
+  const slider = document.getElementById('jadore-taux-remplissage');
+  const sliderInput = document.getElementById('jadore-taux-remplissage-input');
+  slider.addEventListener('input', () => {
+    sliderInput.value = slider.value;
+    jadoreState.tauxRemplissage = parseFloat(slider.value);
+    calculerEstimation();
+  });
+  slider.addEventListener('change', () => {
+    readFormValues();
+    saveToStorage();
+    calculerEstimation();
+  });
+  sliderInput.addEventListener('input', () => {
+    let val = Math.min(90, Math.max(20, parseFloat(sliderInput.value) || 20));
+    slider.value = val;
+    jadoreState.tauxRemplissage = val;
+    calculerEstimation();
+  });
+  sliderInput.addEventListener('change', () => {
+    let val = Math.min(90, Math.max(20, parseFloat(sliderInput.value) || 20));
+    sliderInput.value = val;
+    slider.value = val;
+    jadoreState.tauxRemplissage = val;
+    saveToStorage();
+    calculerEstimation();
   });
 
   // Frais de gestion et nom
@@ -171,10 +201,11 @@ function resetToDefaults() {
     heuresMenage: 5,
     tarifMenageHTVA: 35,
     fraisGestionPourcent: 18,
+    tauxRemplissage: 65,
     prixPoche: {
-      bs: { weekend: 1500, longweekend: 1800, midweek: 1500, semaine: 2500 },
-      ms: { weekend: 1800, longweekend: 2200, midweek: 1600, semaine: 3000 },
-      hs: { weekend: 2000, longweekend: 2500, midweek: 2000, semaine: 3500 }
+      bs: { weekend: 1500, midweek: 1500, semaine: 2500 },
+      ms: { weekend: 1800, midweek: 1600, semaine: 3000 },
+      hs: { weekend: 2000, midweek: 2000, semaine: 3500 }
     },
     resultats: null
   };
@@ -203,7 +234,7 @@ function calculer() {
     const prixPoche = jadoreState.prixPoche[saison];
     resultats[saison] = {};
 
-    ['weekend', 'longweekend', 'midweek', 'semaine'].forEach(type => {
+    ['weekend', 'midweek', 'semaine'].forEach(type => {
       const prixEnPoche = prixPoche[type];
       const loyer = prixEnPoche - menageTVAC;
       const nousRecevons = prixEnPoche;
@@ -225,12 +256,13 @@ function calculer() {
 
   jadoreState.resultats = resultats;
   afficherResultats();
+  calculerEstimation();
 }
 
 // Mettre à jour le header d'impression
 function updatePrintHeader() {
   const printHeader = document.getElementById('jadore-print-header');
-  let html = '<img src="logo.png" alt="Jadore" class="jadore-logo-print">';
+  let html = '<img src="logo1.png" alt="Jadore" class="jadore-logo-print">';
   if (jadoreState.nomGite) {
     html += `<h2 class="print-gite-name">${jadoreState.nomGite}</h2>`;
   }
@@ -301,7 +333,7 @@ function afficherResultats() {
     html += `<h3 class="jadore-saison-titre">${SAISONS[saison]}</h3>`;
     html += `<div class="jadore-blocs-row">`;
 
-    ['weekend', 'longweekend', 'midweek', 'semaine'].forEach(type => {
+    ['weekend', 'midweek', 'semaine'].forEach(type => {
       const data = jadoreState.resultats[saison][type];
       html += genererBloc(TYPES_SEJOUR[type], data);
     });
@@ -369,6 +401,209 @@ function copyToClipboard() {
   });
 }
 
+// ===================================
+// ESTIMATION ANNUELLE DU CA
+// ===================================
+
+// Données réelles de l'année par saison
+const JOURS_PAR_SAISON = { hs: 93, ms: 61, bs: 211 }; // = 365 jours
+const WEEKENDS_PAR_SAISON = { hs: 18, ms: 10, bs: 24 }; // = 52 weekends
+
+// Taux de remplissage de base (calibration réaliste)
+// Weekends se remplissent en premier, puis midweeks, puis semaines complètes
+const TAUX_BASE = {
+  hs: { semaine: 0.75, weekend: 1.00, midweek: 0.80 },
+  ms: { semaine: 0.40, weekend: 0.80, midweek: 0.50 },
+  bs: { semaine: 0.10, weekend: 0.40, midweek: 0.20 }
+};
+
+// Plafonds pour les taux après scaling
+const TAUX_PLAFOND = { semaine: 0.95, weekend: 1.00, midweek: 0.95 };
+
+/**
+ * Calcule les réservations par saison et type en fonction du taux cible.
+ * Algorithme itératif qui scale les taux de base pour atteindre le nombre de nuits cible.
+ */
+function calculerRepartition(tauxCiblePct) {
+  const nuitsCibles = Math.round(365 * tauxCiblePct / 100);
+
+  // Copier les taux de base
+  let tauxActuels = {};
+  ['hs', 'ms', 'bs'].forEach(s => {
+    tauxActuels[s] = { ...TAUX_BASE[s] };
+  });
+
+  // Itérer pour ajuster le facteur d'échelle
+  for (let iter = 0; iter < 20; iter++) {
+    const result = simulerReservations(tauxActuels);
+    const nuitsCalculees = result.totalNuits;
+
+    if (Math.abs(nuitsCalculees - nuitsCibles) <= 1) break;
+
+    const facteur = nuitsCibles / Math.max(nuitsCalculees, 1);
+
+    // Appliquer le facteur avec plafonds
+    ['hs', 'ms', 'bs'].forEach(s => {
+      ['semaine', 'weekend', 'midweek'].forEach(t => {
+        tauxActuels[s][t] = Math.min(
+          tauxActuels[s][t] * facteur,
+          TAUX_PLAFOND[t]
+        );
+      });
+    });
+  }
+
+  return simulerReservations(tauxActuels);
+}
+
+/**
+ * Simule les réservations en respectant la logique de priorité :
+ * 1. Semaines complètes (7n) → consomment 1 créneau WE + 1 créneau MW
+ * 2. Weekends (2n) dans les créneaux restants
+ * 3. Midweeks (4n) dans les créneaux restants
+ *
+ * Le nombre de créneaux par saison = nombre de weekends disponibles.
+ */
+function simulerReservations(taux) {
+  const repartition = {};
+  let totalNuits = 0;
+
+  ['hs', 'ms', 'bs'].forEach(saison => {
+    const nbCreneaux = WEEKENDS_PAR_SAISON[saison];
+    const joursSaison = JOURS_PAR_SAISON[saison];
+    const t = taux[saison];
+
+    // 1. Semaines complètes (bloquent 1 WE + 1 MW)
+    const nbSemaines = Math.round(nbCreneaux * t.semaine);
+
+    // Créneaux restants pour WE et MW séparés
+    const restant = nbCreneaux - nbSemaines;
+
+    // 2. Weekends dans les créneaux restants
+    const nbWeekends = Math.round(restant * t.weekend);
+
+    // 3. Midweeks dans les créneaux restants
+    const nbMidweeks = Math.round(restant * t.midweek);
+
+    // Calcul des nuits
+    const nuitsSaison = nbSemaines * 7 + nbWeekends * 2 + nbMidweeks * 4;
+
+    repartition[saison] = {
+      semaine: nbSemaines,
+      weekend: nbWeekends,
+      midweek: nbMidweeks,
+      nuits: nuitsSaison,
+      taux: Math.round(nuitsSaison / joursSaison * 100)
+    };
+
+    totalNuits += nuitsSaison;
+  });
+
+  return { repartition, totalNuits };
+}
+
+/**
+ * Calcule et affiche l'estimation annuelle du CA
+ */
+function calculerEstimation() {
+  if (!jadoreState.resultats) return;
+
+  const tauxCible = jadoreState.tauxRemplissage;
+  const { repartition, totalNuits } = calculerRepartition(tauxCible);
+
+  const menageTVAC = calculerMenageTVAC();
+  const fraisGestionPct = jadoreState.fraisGestionPourcent / 100;
+
+  let caJadore = 0;
+  let caClient = 0;
+  let caTotal = 0;
+
+  // Calculer les CA par saison et type
+  ['hs', 'ms', 'bs'].forEach(saison => {
+    const rep = repartition[saison];
+    const types = {
+      semaine: rep.semaine,
+      weekend: rep.weekend,
+      midweek: rep.midweek
+    };
+
+    Object.entries(types).forEach(([type, nbReservations]) => {
+      if (nbReservations <= 0) return;
+
+      const prixEnPoche = jadoreState.prixPoche[saison][type];
+      const loyer = prixEnPoche - menageTVAC;
+      const fraisGestionTVAC = loyer * fraisGestionPct * (1 + TVA);
+
+      const jadorePart = (menageTVAC + fraisGestionTVAC) * nbReservations;
+      const clientPart = (prixEnPoche - menageTVAC - fraisGestionTVAC) * nbReservations;
+      const totalPart = prixEnPoche * nbReservations;
+
+      caJadore += jadorePart;
+      caClient += clientPart;
+      caTotal += totalPart;
+    });
+  });
+
+  // Afficher les résultats
+  afficherEstimation(repartition, totalNuits, tauxCible, caJadore, caClient, caTotal);
+}
+
+/**
+ * Affiche l'estimation dans le DOM
+ */
+function afficherEstimation(repartition, totalNuits, tauxCible, caJadore, caClient, caTotal) {
+  // Mettre à jour le titre
+  document.getElementById('jadore-estimation-nuits').textContent = totalNuits;
+  document.getElementById('jadore-estimation-taux').textContent = tauxCible;
+
+  // Mettre à jour les cartes
+  document.getElementById('jadore-ca-jadore').textContent = formatPrixEntier(caJadore);
+  document.getElementById('jadore-ca-client').textContent = formatPrixEntier(caClient);
+  document.getElementById('jadore-ca-total').textContent = formatPrixEntier(caTotal);
+
+  // Mettre à jour le tableau de répartition
+  const tbody = document.getElementById('jadore-repartition-body');
+  let html = '';
+
+  let totSemaines = 0, totWeekends = 0, totMidweeks = 0, totNuits = 0;
+
+  ['hs', 'ms', 'bs'].forEach(saison => {
+    const r = repartition[saison];
+    totSemaines += r.semaine;
+    totWeekends += r.weekend;
+    totMidweeks += r.midweek;
+    totNuits += r.nuits;
+
+    html += `<tr>
+      <td class="jadore-repartition-saison">${SAISONS[saison]}</td>
+      <td>${r.semaine}</td>
+      <td>${r.weekend}</td>
+      <td>${r.midweek}</td>
+      <td><strong>${r.nuits}</strong></td>
+      <td>${r.taux}%</td>
+    </tr>`;
+  });
+
+  const tauxTotal = Math.round(totNuits / 365 * 100);
+  html += `<tr class="jadore-repartition-total">
+    <td><strong>Total</strong></td>
+    <td><strong>${totSemaines}</strong></td>
+    <td><strong>${totWeekends}</strong></td>
+    <td><strong>${totMidweeks}</strong></td>
+    <td><strong>${totNuits}</strong></td>
+    <td><strong>${tauxTotal}%</strong></td>
+  </tr>`;
+
+  tbody.innerHTML = html;
+}
+
+/**
+ * Formater un prix entier (sans décimales) pour le CA annuel
+ */
+function formatPrixEntier(prix) {
+  return Math.round(prix).toLocaleString('fr-FR') + ' €';
+}
+
 // Générer un rapport texte
 function generateTextReport() {
   if (!jadoreState.resultats) return '';
@@ -391,8 +626,9 @@ function generateTextReport() {
     text += `${SAISONS[saison].toUpperCase()}\n`;
     text += '-'.repeat(30) + '\n';
 
-    ['weekend', 'longweekend', 'midweek', 'semaine'].forEach(type => {
+    ['weekend', 'midweek', 'semaine'].forEach(type => {
       const data = jadoreState.resultats[saison][type];
+      if (!data) return;
       text += `\n  ${TYPES_SEJOUR[type]}:\n`;
       text += `    Loyer:           ${formatPrix2Decimales(data.loyer).padStart(12)}\n`;
       text += `    Ménage:          ${formatPrix2Decimales(data.menageTVAC).padStart(12)}\n`;
@@ -405,6 +641,32 @@ function generateTextReport() {
 
     text += '\n';
   });
+
+  // Ajouter l'estimation annuelle
+  const { repartition, totalNuits } = calculerRepartition(jadoreState.tauxRemplissage);
+  const fraisGestionPct2 = jadoreState.fraisGestionPourcent / 100;
+  let caJ = 0, caC = 0, caT = 0;
+
+  ['hs', 'ms', 'bs'].forEach(saison => {
+    const rep = repartition[saison];
+    ['semaine', 'weekend', 'midweek'].forEach(type => {
+      const nb = rep[type];
+      if (nb <= 0) return;
+      const pp = jadoreState.prixPoche[saison][type];
+      const loyer = pp - menageTVAC;
+      const fdg = loyer * fraisGestionPct2 * (1 + TVA);
+      caJ += (menageTVAC + fdg) * nb;
+      caC += (pp - menageTVAC - fdg) * nb;
+      caT += pp * nb;
+    });
+  });
+
+  text += 'ESTIMATION ANNUELLE\n';
+  text += '='.repeat(50) + '\n';
+  text += `Taux de remplissage: ${jadoreState.tauxRemplissage}% (${totalNuits} nuits)\n\n`;
+  text += `  CA Jadore:       ${formatPrixEntier(caJ).padStart(12)}\n`;
+  text += `  CA Client:       ${formatPrixEntier(caC).padStart(12)}\n`;
+  text += `  CA Total Maison: ${formatPrixEntier(caT).padStart(12)}\n`;
 
   return text;
 }
