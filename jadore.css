@@ -74,7 +74,7 @@
 /* Rangée de blocs côte à côte */
 .jadore-blocs-row {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
@@ -162,6 +162,159 @@
   }
 }
 
+/* Slider taux de remplissage */
+.slider-group {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.slider-jadore {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  background: #FCDEDC;
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+}
+
+.slider-jadore::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #d4918c;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.slider-jadore::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #d4918c;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.slider-value-input {
+  flex-shrink: 0;
+  width: 80px;
+}
+
+/* Estimation annuelle */
+.jadore-estimation {
+  margin-top: 2rem;
+}
+
+/* Cartes CA */
+.jadore-ca-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.jadore-ca-card {
+  border-radius: 10px;
+  padding: 1.25rem;
+  text-align: center;
+}
+
+.jadore-ca-jadore {
+  background: #FCDEDC;
+}
+
+.jadore-ca-client {
+  background: #e8f5e9;
+}
+
+.jadore-ca-total {
+  background: #e3f2fd;
+}
+
+.jadore-ca-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.jadore-ca-montant {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  font-variant-numeric: tabular-nums;
+}
+
+.jadore-ca-detail {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin-top: 0.25rem;
+}
+
+/* Tableau de répartition */
+.jadore-repartition-table-container {
+  overflow-x: auto;
+}
+
+.jadore-repartition-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.jadore-repartition-table th {
+  background: #FCDEDC;
+  color: #1e293b;
+  font-weight: 600;
+  padding: 0.6rem 0.75rem;
+  text-align: center;
+  border-bottom: 2px solid #f0c4c0;
+}
+
+.jadore-repartition-table th:first-child {
+  text-align: left;
+}
+
+.jadore-repartition-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  color: #1e293b;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.jadore-repartition-table td:first-child {
+  text-align: left;
+}
+
+.jadore-repartition-saison {
+  font-weight: 500;
+}
+
+.jadore-repartition-total {
+  background: #fef2f1;
+}
+
+.jadore-repartition-total td {
+  border-top: 2px solid #d4918c;
+  border-bottom: none;
+}
+
+/* Responsive cartes CA */
+@media (max-width: 768px) {
+  .jadore-ca-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
 /* Logo print et mention légale - cachés à l'écran */
 .jadore-logo-print {
   display: none;
@@ -184,7 +337,7 @@
   }
 
   .jadore-blocs-row {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 0.5rem;
   }
 
@@ -218,6 +371,9 @@
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
     border-bottom: 2px solid #FCDEDC;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .jadore-logo-print {
@@ -238,6 +394,44 @@
   .print-date {
     font-size: 0.7rem;
     color: #64748b;
+  }
+
+  /* Estimation annuelle en impression */
+  .jadore-estimation {
+    page-break-inside: avoid;
+    margin-top: 1rem;
+  }
+
+  .jadore-ca-cards {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .jadore-ca-card {
+    padding: 0.6rem;
+    border: 1px solid #e0e0e0;
+  }
+
+  .jadore-ca-label {
+    font-size: 0.65rem;
+  }
+
+  .jadore-ca-montant {
+    font-size: 1rem;
+  }
+
+  .jadore-ca-detail {
+    font-size: 0.6rem;
+  }
+
+  .jadore-repartition-table {
+    font-size: 0.7rem;
+  }
+
+  .jadore-repartition-table th,
+  .jadore-repartition-table td {
+    padding: 0.3rem 0.5rem;
   }
 
   /* Mention légale en bas du document imprimé */

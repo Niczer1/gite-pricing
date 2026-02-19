@@ -70,6 +70,22 @@
           <p class="help-text">Appliqué sur le loyer uniquement, puis +21% TVA</p>
         </div>
 
+        <!-- Taux de remplissage -->
+        <div class="settings-section">
+          <h3>Estimation annuelle</h3>
+          <div class="input-group">
+            <label for="jadore-taux-remplissage">Taux de remplissage</label>
+            <div class="slider-group">
+              <input type="range" id="jadore-taux-remplissage" min="20" max="90" value="65" step="1" class="slider-jadore">
+              <div class="input-with-unit slider-value-input">
+                <input type="number" id="jadore-taux-remplissage-input" value="65" min="20" max="90" step="1">
+                <span class="unit">%</span>
+              </div>
+            </div>
+          </div>
+          <p class="help-text">Pourcentage de nuits occupées sur l'année (365 nuits)</p>
+        </div>
+
         <!-- Prix souhaités "en poche" -->
         <div class="settings-section prix-poche-section">
           <h3>Prix souhaités "en poche"</h3>
@@ -82,13 +98,6 @@
               <label for="jadore-bs-weekend">Weekend (2 nuits)</label>
               <div class="input-with-unit">
                 <input type="number" id="jadore-bs-weekend" value="1500" min="0" step="50">
-                <span class="unit">€</span>
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="jadore-bs-longweekend">Long Weekend (3 nuits)</label>
-              <div class="input-with-unit">
-                <input type="number" id="jadore-bs-longweekend" value="1800" min="0" step="50">
                 <span class="unit">€</span>
               </div>
             </div>
@@ -119,13 +128,6 @@
               </div>
             </div>
             <div class="input-group">
-              <label for="jadore-ms-longweekend">Long Weekend (3 nuits)</label>
-              <div class="input-with-unit">
-                <input type="number" id="jadore-ms-longweekend" value="2200" min="0" step="50">
-                <span class="unit">€</span>
-              </div>
-            </div>
-            <div class="input-group">
               <label for="jadore-ms-midweek">Midweek (4 nuits)</label>
               <div class="input-with-unit">
                 <input type="number" id="jadore-ms-midweek" value="1600" min="0" step="50">
@@ -148,13 +150,6 @@
               <label for="jadore-hs-weekend">Weekend (2 nuits)</label>
               <div class="input-with-unit">
                 <input type="number" id="jadore-hs-weekend" value="2000" min="0" step="50">
-                <span class="unit">€</span>
-              </div>
-            </div>
-            <div class="input-group">
-              <label for="jadore-hs-longweekend">Long Weekend (3 nuits)</label>
-              <div class="input-with-unit">
-                <input type="number" id="jadore-hs-longweekend" value="2500" min="0" step="50">
                 <span class="unit">€</span>
               </div>
             </div>
@@ -206,6 +201,53 @@
 
         <!-- Résultats par saison -->
         <div id="jadore-resultats" class="jadore-resultats"></div>
+
+        <!-- Mention légale après les résultats par saison -->
+        <div class="jadore-print-disclaimer">
+          <p>Ce document est une estimation indicative des revenus nets basée sur les paramètres renseignés. Les montants réels peuvent varier en fonction des conditions de réservation, des promotions appliquées et des éventuels frais supplémentaires. Ce document ne constitue pas un engagement contractuel.</p>
+        </div>
+
+        <!-- Estimation annuelle -->
+        <div id="jadore-estimation" class="jadore-estimation">
+          <h3 class="jadore-saison-titre">Estimation annuelle — <span id="jadore-estimation-nuits">0</span> nuits (<span id="jadore-estimation-taux">65</span>%)</h3>
+
+          <!-- Cartes CA -->
+          <div class="jadore-ca-cards">
+            <div class="jadore-ca-card jadore-ca-jadore">
+              <div class="jadore-ca-label">CA Jadore</div>
+              <div class="jadore-ca-montant" id="jadore-ca-jadore">0 €</div>
+              <div class="jadore-ca-detail">Ménage + Frais de gestion</div>
+            </div>
+            <div class="jadore-ca-card jadore-ca-client">
+              <div class="jadore-ca-label">CA Client</div>
+              <div class="jadore-ca-montant" id="jadore-ca-client">0 €</div>
+              <div class="jadore-ca-detail">Revenus propriétaire</div>
+            </div>
+            <div class="jadore-ca-card jadore-ca-total">
+              <div class="jadore-ca-label">CA Total Maison</div>
+              <div class="jadore-ca-montant" id="jadore-ca-total">0 €</div>
+              <div class="jadore-ca-detail">Total prix en poche</div>
+            </div>
+          </div>
+
+          <!-- Tableau de répartition -->
+          <div class="jadore-repartition-table-container">
+            <table class="jadore-repartition-table" id="jadore-repartition-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Semaines</th>
+                  <th>Weekends</th>
+                  <th>Midweeks</th>
+                  <th>Nuits</th>
+                  <th>Taux</th>
+                </tr>
+              </thead>
+              <tbody id="jadore-repartition-body">
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <!-- Mention légale (visible uniquement à l'impression) -->
         <div class="jadore-print-disclaimer">
