@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jadore - Conciergerie Saisonnière</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="jadore.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation -->
+    <nav class="app-nav">
+      <a href="index.html" class="nav-link">Gîte Pricing</a>
+      <a href="jadore.html" class="nav-link nav-jadore active">Jadore</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="app-header jadore-header">
+      <h1>Jadore</h1>
+      <p class="subtitle">Conciergerie saisonnière — Calcul de rentabilité</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Panneau de paramètres -->
+      <aside class="settings-panel">
+        <h2>Paramètres</h2>
+
+        <!-- Nom du gîte -->
+        <div class="settings-section">
+          <h3>Identification</h3>
+          <div class="input-group">
+            <label for="jadore-nom-gite">Nom du gîte</label>
+            <input type="text" id="jadore-nom-gite" value="" placeholder="Ex: La Maison du Lac">
+          </div>
+        </div>
+
+        <!-- Ménage -->
+        <div class="settings-section">
+          <h3>Ménage</h3>
+          <div class="input-group">
+            <label for="jadore-heures-menage">Nombre d'heures</label>
+            <div class="input-with-unit">
+              <input type="number" id="jadore-heures-menage" value="5" min="0" step="0.5">
+              <span class="unit">h</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="jadore-tarif-menage">Tarif horaire HTVA</label>
+            <div class="input-with-unit">
+              <input type="number" id="jadore-tarif-menage" value="35" min="0" step="1">
+              <span class="unit">€</span>
+            </div>
+          </div>
+          <div class="menage-total">
+            Ménage TVAC : <strong id="jadore-menage-tvac">211,75 €</strong>
+          </div>
+        </div>
+
+        <!-- Frais de gestion -->
+        <div class="settings-section">
+          <h3>Frais de gestion</h3>
+          <div class="input-group">
+            <label for="jadore-frais-gestion">Pourcentage HTVA (sur loyer)</label>
+            <div class="input-with-unit">
+              <input type="number" id="jadore-frais-gestion" value="18" min="0" max="100" step="0.5">
+              <span class="unit">%</span>
+            </div>
+          </div>
+          <p class="help-text">Appliqué sur le loyer uniquement, puis +21% TVA</p>
+        </div>
+
+        <!-- Prix souhaités "en poche" -->
+        <div class="settings-section prix-poche-section">
+          <h3>Prix souhaités "en poche"</h3>
+          <p class="help-text">Prix total souhaité (ménage inclus)</p>
+
+          <!-- Basse Saison -->
+          <div class="season-inputs">
+            <h4 class="season-title season-bs">Basse Saison</h4>
+            <div class="input-group">
+              <label for="jadore-bs-weekend">Weekend (2 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-bs-weekend" value="1500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-bs-longweekend">Long Weekend (3 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-bs-longweekend" value="1800" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-bs-midweek">Midweek (4 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-bs-midweek" value="1500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-bs-semaine">Semaine (7 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-bs-semaine" value="2500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moyenne Saison -->
+          <div class="season-inputs">
+            <h4 class="season-title season-ms">Moyenne Saison</h4>
+            <div class="input-group">
+              <label for="jadore-ms-weekend">Weekend (2 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-ms-weekend" value="1800" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-ms-longweekend">Long Weekend (3 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-ms-longweekend" value="2200" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-ms-midweek">Midweek (4 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-ms-midweek" value="1600" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-ms-semaine">Semaine (7 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-ms-semaine" value="3000" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Haute Saison -->
+          <div class="season-inputs">
+            <h4 class="season-title season-hs">Haute Saison</h4>
+            <div class="input-group">
+              <label for="jadore-hs-weekend">Weekend (2 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-hs-weekend" value="2000" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-hs-longweekend">Long Weekend (3 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-hs-longweekend" value="2500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-hs-midweek">Midweek (4 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-hs-midweek" value="2000" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="jadore-hs-semaine">Semaine (7 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="jadore-hs-semaine" value="3500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="action-buttons">
+          <button id="jadore-btn-calculer" class="btn btn-primary btn-jadore">Calculer</button>
+          <button id="jadore-btn-reset" class="btn btn-secondary">Réinitialiser</button>
+        </div>
+      </aside>
+
+      <!-- Zone des résultats -->
+      <section class="results-panel">
+        <div class="results-header">
+          <h2>Résultats</h2>
+          <div class="export-buttons">
+            <button id="jadore-btn-copy" class="btn btn-outline btn-outline-jadore" title="Copier dans le presse-papier">
+              Copier
+            </button>
+            <button id="jadore-btn-print" class="btn btn-outline btn-outline-jadore" title="Imprimer">
+              Imprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- Header pour impression (logo + nom du gîte) -->
+        <div id="jadore-print-header" class="print-header">
+          <img src="logo1.png" alt="Jadore" class="jadore-logo-print">
+        </div>
+
+        <!-- Messages de validation -->
+        <div id="jadore-validation-messages" class="validation-messages"></div>
+
+        <!-- Résultats par saison -->
+        <div id="jadore-resultats" class="jadore-resultats"></div>
+
+        <!-- Mention légale (visible uniquement à l'impression) -->
+        <div class="jadore-print-disclaimer">
+          <p>Ce document est une estimation indicative des revenus nets basée sur les paramètres renseignés. Les montants réels peuvent varier en fonction des conditions de réservation, des promotions appliquées et des éventuels frais supplémentaires. Ce document ne constitue pas un engagement contractuel.</p>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Jadore - Conciergerie Saisonnière v1.0.0</p>
+    </footer>
+  </div>
+
+  <script src="jadore.js"></script>
+</body>
+</html>

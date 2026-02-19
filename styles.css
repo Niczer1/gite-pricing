@@ -1,0 +1,855 @@
+/* Variables CSS */
+:root {
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-secondary: #64748b;
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  /* Couleurs des saisons */
+  --color-bs: #f1f5f9; /* Basse saison - gris clair */
+  --color-bs-text: #475569;
+  --color-ms: #fef3c7; /* Moyenne saison - jaune pâle */
+  --color-ms-text: #92400e;
+  --color-hs: #fed7aa; /* Haute saison - orange pâle */
+  --color-hs-text: #c2410c;
+
+  /* Couleurs des plateformes */
+  --color-booking: #003580;
+  --color-airbnb: #ff5a5f;
+  --color-natuurhuisje: #4caf50;
+
+  --bg-color: #f8fafc;
+  --card-bg: #ffffff;
+  --border-color: #e2e8f0;
+  --text-color: #1e293b;
+  --text-muted: #64748b;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+
+  --radius: 8px;
+  --radius-lg: 12px;
+}
+
+/* Navigation entre pages */
+.app-nav {
+  display: flex;
+  background: #1e293b;
+  padding: 0;
+}
+
+.nav-link {
+  padding: 0.75rem 1.5rem;
+  color: #94a3b8;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+}
+
+.nav-link:hover {
+  color: white;
+  background: #334155;
+}
+
+.nav-link.active {
+  color: white;
+  border-bottom-color: var(--color-primary);
+  background: #334155;
+}
+
+.nav-link.nav-jadore.active {
+  border-bottom-color: #e91e63;
+}
+
+/* Reset et base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Layout principal */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #1e40af 100%);
+  color: white;
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+.app-header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.app-header .subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  gap: 1.5rem;
+  padding: 1.5rem;
+}
+
+/* Panneau des paramètres */
+.settings-panel {
+  width: 320px;
+  flex-shrink: 0;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
+
+.settings-panel h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.25rem;
+  color: var(--color-primary);
+  border-bottom: 2px solid var(--color-primary);
+  padding-bottom: 0.5rem;
+}
+
+.settings-section {
+  margin-bottom: 1.5rem;
+}
+
+.settings-section h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.75rem;
+}
+
+.input-group {
+  margin-bottom: 0.75rem;
+}
+
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--text-color);
+}
+
+.input-with-unit {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-unit input {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius) 0 0 var(--radius);
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.input-with-unit input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.input-with-unit .unit {
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-left: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Sections des prix par saison */
+.prix-poche-section {
+  margin-top: 1rem;
+}
+
+.season-inputs {
+  margin-bottom: 1.25rem;
+  padding: 1rem;
+  background: var(--bg-color);
+  border-radius: var(--radius);
+}
+
+.season-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  display: inline-block;
+}
+
+.season-bs {
+  background: var(--color-bs);
+  color: var(--color-bs-text);
+}
+
+.season-ms {
+  background: var(--color-ms);
+  color: var(--color-ms-text);
+}
+
+.season-hs {
+  background: var(--color-hs);
+  color: var(--color-hs-text);
+}
+
+/* Boutons */
+.action-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn {
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  flex: 1;
+  background: var(--color-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  background: var(--color-primary-hover);
+}
+
+.btn-secondary {
+  background: var(--bg-color);
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background: var(--border-color);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+}
+
+.btn-outline:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+/* Panneau des résultats */
+.results-panel {
+  flex: 1;
+  background: var(--card-bg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-height: calc(100vh - 180px);
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.results-header h2 {
+  font-size: 1.25rem;
+  color: var(--color-primary);
+}
+
+.export-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Messages de validation */
+.validation-messages {
+  margin-bottom: 1rem;
+}
+
+.validation-message {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.validation-warning {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+.validation-error {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.validation-success {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+/* Onglets */
+.tabs {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0;
+}
+
+.tab {
+  padding: 0.75rem 1.25rem;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: var(--color-primary);
+}
+
+.tab.active {
+  color: var(--color-primary);
+}
+
+.tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--color-primary);
+}
+
+/* Contenu des onglets */
+.season-content {
+  display: none;
+}
+
+.season-content.active {
+  display: block;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 1.5rem 0 0.75rem 0;
+}
+
+.section-title:first-child {
+  margin-top: 0;
+}
+
+/* Tableaux */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+th, td {
+  padding: 0.75rem 1rem;
+  text-align: right;
+  border: 1px solid var(--border-color);
+}
+
+th {
+  background: var(--bg-color);
+  font-weight: 600;
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+th:first-child,
+td:first-child {
+  text-align: left;
+}
+
+td {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Couleurs des plateformes dans les tableaux */
+.platform-booking {
+  color: var(--color-booking);
+  font-weight: 600;
+}
+
+.platform-airbnb {
+  color: var(--color-airbnb);
+  font-weight: 600;
+}
+
+.platform-natuurhuisje {
+  color: var(--color-natuurhuisje);
+  font-weight: 600;
+}
+
+/* Couleurs de fond pour les saisons dans le récap */
+.row-bs {
+  background-color: var(--color-bs);
+}
+
+.row-ms {
+  background-color: var(--color-ms);
+}
+
+.row-hs {
+  background-color: var(--color-hs);
+}
+
+/* Cellules de réduction */
+.reduction-cell {
+  color: var(--color-success);
+  font-weight: 600;
+}
+
+.reduction-cell.no-reduction {
+  color: var(--text-muted);
+}
+
+/* Cellules "en poche" */
+.poche-cell {
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+/* Ligne de total */
+tr.total-row {
+  font-weight: 700;
+  background: var(--bg-color);
+}
+
+/* Ligne de nettoyage */
+tr.nettoyage-row {
+  background: #f0f9ff;
+  border-top: 2px solid var(--border-color);
+}
+
+tr.nettoyage-row td {
+  color: var(--color-primary);
+}
+
+tr.total-row td {
+  border-top: 2px solid var(--border-color);
+}
+
+/* Tableau récapitulatif */
+.recap-table th.platform-header {
+  text-align: center;
+  padding: 0.5rem;
+}
+
+.recap-table th.platform-header.booking {
+  background: var(--color-booking);
+  color: white;
+}
+
+.recap-table th.platform-header.airbnb {
+  background: var(--color-airbnb);
+  color: white;
+}
+
+.recap-table th.platform-header.natuurhuisje {
+  background: var(--color-natuurhuisje);
+  color: white;
+}
+
+.recap-table .season-header {
+  text-align: center;
+  font-weight: 600;
+}
+
+.recap-table .season-header.bs {
+  background: var(--color-bs);
+  color: var(--color-bs-text);
+}
+
+.recap-table .season-header.ms {
+  background: var(--color-ms);
+  color: var(--color-ms-text);
+}
+
+.recap-table .season-header.hs {
+  background: var(--color-hs);
+  color: var(--color-hs-text);
+}
+
+/* Input texte pour le nom du gîte */
+#nom-gite {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#nom-gite:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+/* Texte d'aide */
+.help-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  font-style: italic;
+}
+
+/* Input avec réduction */
+.input-group.with-reduction {
+  margin-bottom: 0.75rem;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.input-row .input-with-unit {
+  flex: 1;
+}
+
+.reduction-input {
+  display: flex;
+  align-items: center;
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.reduction-input input {
+  width: 45px;
+  padding: 0.5rem 0.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius) 0 0 var(--radius);
+  font-size: 0.85rem;
+  text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.reduction-input input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.reduction-input .unit {
+  padding: 0.5rem 0.5rem;
+  background: var(--color-success);
+  border: 1px solid var(--color-success);
+  border-left: none;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.8rem;
+  color: white;
+  font-weight: 600;
+}
+
+/* Suggestions */
+.suggestion {
+  display: block;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  font-style: italic;
+}
+
+/* Valeurs calculées */
+.calculated-group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed var(--border-color);
+}
+
+.calculated-group:last-child {
+  border-bottom: none;
+}
+
+.calculated-group label {
+  margin-bottom: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.calculated-value {
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: 0.9rem;
+}
+
+/* Note sous les tableaux */
+.table-note {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Header d'impression */
+.print-header {
+  display: none;
+}
+
+/* Footer */
+.app-footer {
+  text-align: center;
+  padding: 1rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  border-top: 1px solid var(--border-color);
+  background: var(--card-bg);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main-content {
+    flex-direction: column;
+  }
+
+  .settings-panel {
+    width: 100%;
+    max-height: none;
+  }
+
+  .results-panel {
+    max-height: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .settings-panel,
+  .results-panel {
+    padding: 1rem;
+  }
+
+  .tabs {
+    flex-wrap: wrap;
+  }
+
+  .tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .export-buttons {
+    flex-wrap: wrap;
+  }
+
+  table {
+    font-size: 0.8rem;
+  }
+
+  th, td {
+    padding: 0.5rem;
+  }
+}
+
+/* Impression - Tout en portrait */
+@page {
+  size: A4 portrait;
+  margin: 1cm;
+}
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  body {
+    font-size: 10px;
+  }
+
+  .app-nav,
+  .settings-panel,
+  .app-header,
+  .app-footer,
+  .tabs,
+  .export-buttons,
+  .action-buttons,
+  .validation-messages,
+  .results-header h2 {
+    display: none !important;
+  }
+
+  .main-content {
+    display: block;
+    padding: 0;
+  }
+
+  .results-panel {
+    box-shadow: none;
+    max-height: none;
+    padding: 0;
+  }
+
+  /* Header d'impression */
+  .print-header {
+    display: block !important;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-primary);
+  }
+
+  .print-gite-name {
+    font-size: 1.2rem;
+    color: var(--color-primary);
+    margin-bottom: 0.15rem;
+  }
+
+  .print-date {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+  }
+
+  /* Page 1 : Toutes les saisons */
+  .season-content {
+    display: block !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid;
+    margin-bottom: 0.5rem;
+  }
+
+  .section-title {
+    font-size: 0.85rem;
+    margin: 0.5rem 0 0.25rem 0;
+  }
+
+  /* Tableaux compacts */
+  table {
+    page-break-inside: avoid;
+    font-size: 9px;
+    margin-bottom: 0.25rem;
+  }
+
+  th, td {
+    padding: 0.25rem 0.4rem;
+  }
+
+  .table-note {
+    font-size: 0.6rem;
+    margin-top: 0.15rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .table-container {
+    margin-bottom: 0.5rem;
+  }
+
+  /* Page 2 : Récapitulatif compact en portrait */
+  #content-recap {
+    display: block !important;
+    page-break-before: always !important;
+    page-break-inside: avoid !important;
+  }
+
+  #content-recap .section-title {
+    font-size: 1rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  #content-recap table {
+    font-size: 9px;
+    width: 100%;
+    page-break-inside: avoid !important;
+  }
+
+  #content-recap th,
+  #content-recap td {
+    padding: 0.3rem 0.5rem;
+  }
+
+  /* Réduire l'espace des séparateurs */
+  #content-recap tr.separator td {
+    height: 2px !important;
+    padding: 0 !important;
+  }
+}

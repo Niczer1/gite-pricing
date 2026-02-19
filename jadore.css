@@ -1,0 +1,258 @@
+/* Jadore - Thème rose conciergerie saisonnière */
+
+/* Header rose avec logo */
+.jadore-header {
+  background: #FCDEDC !important;
+  position: relative;
+}
+
+.jadore-header h1 {
+  color: #1e293b !important;
+}
+
+.jadore-header .subtitle {
+  color: #4a4a4a !important;
+}
+
+.jadore-logo-header {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 200px;
+  width: auto;
+  filter: none;
+}
+
+/* Boutons roses */
+.btn-jadore {
+  background: #d4918c !important;
+}
+
+.btn-jadore:hover {
+  background: #b87570 !important;
+}
+
+.btn-outline-jadore {
+  color: #b87570 !important;
+  border-color: #b87570 !important;
+}
+
+.btn-outline-jadore:hover {
+  background: #b87570 !important;
+  color: white !important;
+}
+
+/* Ménage total display */
+.menage-total {
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #FCDEDC;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.menage-total strong {
+  color: #1e293b;
+}
+
+/* Section par saison */
+.jadore-saison-section {
+  margin-bottom: 2rem;
+}
+
+.jadore-saison-titre {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #FCDEDC;
+}
+
+/* Rangée de blocs côte à côte */
+.jadore-blocs-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+/* Bloc individuel */
+.jadore-bloc {
+  background: #FCDEDC;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.jadore-bloc-titre {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 0.75rem;
+  background: #f0c4c0;
+  color: #1e293b;
+  margin: 0;
+}
+
+.jadore-bloc-contenu {
+  padding: 0.75rem;
+}
+
+/* Ligne de données */
+.jadore-ligne {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  font-size: 0.85rem;
+  color: #1e293b;
+}
+
+.jadore-label {
+  flex-shrink: 0;
+}
+
+.jadore-valeur {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+
+/* Ligne total */
+.jadore-ligne-total {
+  padding-top: 0.4rem;
+}
+
+/* Séparateur */
+.jadore-separateur {
+  height: 1px;
+  background: #d4918c;
+  margin: 0.5rem 0;
+}
+
+.jadore-separateur-final {
+  height: 2px;
+  background: #b87570;
+  margin: 0.6rem 0;
+}
+
+/* Ligne gain final */
+.jadore-ligne-gain {
+  font-size: 0.95rem;
+  color: #1b5e20;
+}
+
+.jadore-ligne-gain .jadore-valeur {
+  color: #1b5e20;
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+  .jadore-blocs-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .jadore-blocs-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Logo print et mention légale - cachés à l'écran */
+.jadore-logo-print {
+  display: none;
+}
+
+.jadore-print-disclaimer {
+  display: none;
+}
+
+/* Impression */
+@media print {
+  .jadore-saison-section {
+    page-break-inside: avoid;
+    margin-bottom: 1rem;
+  }
+
+  .jadore-saison-titre {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .jadore-blocs-row {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+
+  .jadore-bloc {
+    border: 1px solid #FCDEDC;
+  }
+
+  .jadore-bloc-titre {
+    font-size: 0.75rem;
+    padding: 0.35rem;
+  }
+
+  .jadore-bloc-contenu {
+    padding: 0.4rem;
+  }
+
+  .jadore-ligne {
+    font-size: 0.7rem;
+    padding: 0.15rem 0;
+  }
+
+  .jadore-ligne-gain .jadore-valeur {
+    font-size: 0.75rem;
+  }
+
+  /* Logo en haut du document imprimé */
+  .print-header {
+    display: block !important;
+    position: relative;
+    text-align: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #FCDEDC;
+  }
+
+  .jadore-logo-print {
+    display: block !important;
+    position: absolute;
+    right: -50px;
+    top: -75px;
+    height: 250px;
+    width: auto;
+  }
+
+  .print-gite-name {
+    font-size: 1.2rem;
+    color: #1e293b;
+    margin-top: 0.25rem;
+  }
+
+  .print-date {
+    font-size: 0.7rem;
+    color: #64748b;
+  }
+
+  /* Mention légale en bas du document imprimé */
+  .jadore-print-disclaimer {
+    display: block !important;
+    margin-top: 1.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e0e0e0;
+  }
+
+  .jadore-print-disclaimer p {
+    font-size: 0.6rem;
+    color: #9e9e9e;
+    text-align: center;
+    font-style: italic;
+    line-height: 1.4;
+  }
+}

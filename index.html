@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gîte Pricing - Calculateur de Prix</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Navigation -->
+    <nav class="app-nav">
+      <a href="index.html" class="nav-link active">Gîte Pricing</a>
+      <a href="jadore.html" class="nav-link nav-jadore">Jadore</a>
+    </nav>
+
+    <!-- Header -->
+    <header class="app-header">
+      <h1>Gîte Pricing</h1>
+      <p class="subtitle">Calculez vos prix pour Booking, Airbnb et Natuurhuisje</p>
+    </header>
+
+    <main class="main-content">
+      <!-- Panneau de paramètres -->
+      <aside class="settings-panel">
+        <h2>Paramètres</h2>
+
+        <!-- Nom du gîte -->
+        <div class="settings-section">
+          <h3>Identification</h3>
+          <div class="input-group">
+            <label for="nom-gite">Nom du gîte</label>
+            <input type="text" id="nom-gite" value="" placeholder="Ex: La Maison du Lac">
+          </div>
+        </div>
+
+        <!-- Frais de nettoyage -->
+        <div class="settings-section">
+          <h3>Frais de nettoyage</h3>
+          <div class="input-group">
+            <label for="nettoyage">Nettoyage (inclus dans prix en poche)</label>
+            <div class="input-with-unit">
+              <input type="number" id="nettoyage" value="200" min="0" step="10">
+              <span class="unit">€</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Commissions des plateformes -->
+        <div class="settings-section">
+          <h3>Commissions</h3>
+          <div class="input-group">
+            <label for="commission-booking">Booking</label>
+            <div class="input-with-unit">
+              <input type="number" id="commission-booking" value="13.25" min="0" max="100" step="0.01">
+              <span class="unit">%</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="commission-airbnb">Airbnb</label>
+            <div class="input-with-unit">
+              <input type="number" id="commission-airbnb" value="18.76" min="0" max="100" step="0.01">
+              <span class="unit">%</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="commission-natuurhuisje">Natuurhuisje</label>
+            <div class="input-with-unit">
+              <input type="number" id="commission-natuurhuisje" value="12" min="0" max="100" step="0.01">
+              <span class="unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Options d'arrondi -->
+        <div class="settings-section">
+          <h3>Arrondi des prix</h3>
+          <div class="input-group">
+            <label for="arrondi">Arrondir à</label>
+            <select id="arrondi">
+              <option value="1">1 €</option>
+              <option value="5" selected>5 €</option>
+              <option value="10">10 €</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Réductions -->
+        <div class="settings-section">
+          <h3>Réductions séjours</h3>
+          <div class="input-group">
+            <label for="reduction-midweek">Réduction Midweek (4 nuits)</label>
+            <div class="input-with-unit">
+              <input type="number" id="reduction-midweek" value="0" min="0" max="50" step="1">
+              <span class="unit">%</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <label for="reduction-semaine">Réduction Semaine (7 nuits)</label>
+            <div class="input-with-unit">
+              <input type="number" id="reduction-semaine" value="0" min="0" max="50" step="1">
+              <span class="unit">%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prix souhaités "en poche" -->
+        <div class="settings-section prix-poche-section">
+          <h3>Prix souhaités "en poche"</h3>
+          <p class="help-text">Prix total souhaité (nettoyage inclus)</p>
+
+          <!-- Basse Saison -->
+          <div class="season-inputs">
+            <h4 class="season-title season-bs">Basse Saison</h4>
+            <div class="input-group">
+              <label for="bs-weekend">Weekend (2 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="bs-weekend" value="1500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="bs-longweekend">Long Weekend (3 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="bs-longweekend" value="1800" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="bs-midweek">Midweek (4 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="bs-midweek" value="1500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="bs-semaine">Semaine (7 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="bs-semaine" value="2500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Moyenne Saison -->
+          <div class="season-inputs">
+            <h4 class="season-title season-ms">Moyenne Saison</h4>
+            <div class="input-group">
+              <label for="ms-weekend">Weekend (2 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="ms-weekend" value="1800" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="ms-longweekend">Long Weekend (3 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="ms-longweekend" value="2200" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="ms-midweek">Midweek (4 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="ms-midweek" value="1600" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="ms-semaine">Semaine (7 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="ms-semaine" value="3000" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Haute Saison -->
+          <div class="season-inputs">
+            <h4 class="season-title season-hs">Haute Saison</h4>
+            <div class="input-group">
+              <label for="hs-weekend">Weekend (2 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="hs-weekend" value="2000" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="hs-longweekend">Long Weekend (3 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="hs-longweekend" value="2500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="hs-midweek">Midweek (4 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="hs-midweek" value="2000" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+            <div class="input-group">
+              <label for="hs-semaine">Semaine (7 nuits)</label>
+              <div class="input-with-unit">
+                <input type="number" id="hs-semaine" value="3500" min="0" step="50">
+                <span class="unit">€</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Boutons d'action -->
+        <div class="action-buttons">
+          <button id="btn-calculer" class="btn btn-primary">Calculer</button>
+          <button id="btn-reset" class="btn btn-secondary">Réinitialiser</button>
+        </div>
+      </aside>
+
+      <!-- Zone des résultats -->
+      <section class="results-panel">
+        <div class="results-header">
+          <h2>Résultats</h2>
+          <div class="export-buttons">
+            <button id="btn-copy" class="btn btn-outline" title="Copier dans le presse-papier">
+              Copier
+            </button>
+            <button id="btn-export-csv" class="btn btn-outline" title="Exporter en CSV">
+              Export CSV
+            </button>
+            <button id="btn-print" class="btn btn-outline" title="Imprimer">
+              Imprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- Nom du gîte pour impression -->
+        <div id="print-header" class="print-header"></div>
+
+        <!-- Messages de validation -->
+        <div id="validation-messages" class="validation-messages"></div>
+
+        <!-- Onglets des saisons -->
+        <div class="tabs">
+          <button class="tab active" data-season="bs">Basse Saison</button>
+          <button class="tab" data-season="ms">Moyenne Saison</button>
+          <button class="tab" data-season="hs">Haute Saison</button>
+          <button class="tab" data-season="recap">Récapitulatif</button>
+        </div>
+
+        <!-- Contenu des onglets -->
+        <div class="tab-content">
+          <!-- Basse Saison -->
+          <div id="content-bs" class="season-content active">
+            <h3 class="section-title">Basse Saison - Prix par nuit</h3>
+            <div class="table-container" id="table-nuit-bs"></div>
+
+            <h3 class="section-title">Basse Saison - Récapitulatif des séjours</h3>
+            <div class="table-container" id="table-sejour-bs"></div>
+          </div>
+
+          <!-- Moyenne Saison -->
+          <div id="content-ms" class="season-content">
+            <h3 class="section-title">Moyenne Saison - Prix par nuit</h3>
+            <div class="table-container" id="table-nuit-ms"></div>
+
+            <h3 class="section-title">Moyenne Saison - Récapitulatif des séjours</h3>
+            <div class="table-container" id="table-sejour-ms"></div>
+          </div>
+
+          <!-- Haute Saison -->
+          <div id="content-hs" class="season-content">
+            <h3 class="section-title">Haute Saison - Prix par nuit</h3>
+            <div class="table-container" id="table-nuit-hs"></div>
+
+            <h3 class="section-title">Haute Saison - Récapitulatif des séjours</h3>
+            <div class="table-container" id="table-sejour-hs"></div>
+          </div>
+
+          <!-- Récapitulatif global -->
+          <div id="content-recap" class="season-content">
+            <h3 class="section-title">Récapitulatif par plateforme</h3>
+            <div class="table-container" id="table-recap-global"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Gîte Pricing v1.0.0 - Calculateur de prix pour locations de vacances</p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
