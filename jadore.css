@@ -1,17 +1,48 @@
-/* Jadore - Thème rose conciergerie saisonnière */
+/* Jadore - Thème conciergerie saisonnière */
 
-/* Header rose avec logo */
+/* ===== PALETTE — Modifier ces variables pour changer toutes les couleurs ===== */
+:root {
+  --jadore-primary: #d4918c;         /* Rose principal (boutons, accents) */
+  --jadore-primary-dark: #b87570;    /* Rose foncé (hover, bordures fortes) */
+  --jadore-primary-light: #FCDEDC;   /* Rose pâle (fonds, header) */
+  --jadore-primary-medium: #f0c4c0;  /* Rose moyen (titres blocs, bordures) */
+  --jadore-primary-subtle: #fef8f7;  /* Rose très pâle (panneau avancé) */
+  --jadore-primary-bg: #fef2f1;      /* Rose fond tableau total */
+  --jadore-title: #6b4c6e;           /* Violet foncé (titre Paramètres) */
+  --jadore-text: #1e293b;            /* Texte principal */
+  --jadore-text-muted: #64748b;      /* Texte secondaire */
+  --jadore-text-light: #94a3b8;      /* Texte discret */
+  --jadore-success: #1b5e20;         /* Vert gain */
+  --jadore-ca-client: #e8f5e9;       /* Fond carte CA Client */
+  --jadore-ca-total: #e3f2fd;        /* Fond carte CA Total */
+  --jadore-danger: #d32f2f;          /* Warning/erreur */
+  --jadore-border: #e2e8f0;          /* Bordures neutres */
+  --jadore-border-light: #f1f5f9;    /* Bordures très claires */
+}
+
+/* ===== Titres Paramètres & Résultats ===== */
+.jadore-page .settings-panel h2 {
+  color: var(--jadore-title);
+  border-bottom-color: var(--jadore-title);
+}
+
+.jadore-page .results-panel h2 {
+  color: var(--jadore-text);
+  border-bottom-color: var(--jadore-text);
+}
+
+/* ===== Header rose avec logo ===== */
 .jadore-header {
-  background: #FCDEDC !important;
+  background: var(--jadore-primary-light) !important;
   position: relative;
 }
 
 .jadore-header h1 {
-  color: #1e293b !important;
+  color: var(--jadore-text) !important;
 }
 
 .jadore-header .subtitle {
-  color: #4a4a4a !important;
+  color: var(--jadore-text-muted) !important;
 }
 
 .jadore-logo-header {
@@ -24,40 +55,40 @@
   filter: none;
 }
 
-/* Boutons roses */
+/* ===== Boutons ===== */
 .btn-jadore {
-  background: #d4918c !important;
+  background: var(--jadore-primary) !important;
 }
 
 .btn-jadore:hover {
-  background: #b87570 !important;
+  background: var(--jadore-primary-dark) !important;
 }
 
 .btn-outline-jadore {
-  color: #b87570 !important;
-  border-color: #b87570 !important;
+  color: var(--jadore-primary-dark) !important;
+  border-color: var(--jadore-primary-dark) !important;
 }
 
 .btn-outline-jadore:hover {
-  background: #b87570 !important;
+  background: var(--jadore-primary-dark) !important;
   color: white !important;
 }
 
-/* Ménage total display */
+/* ===== Ménage total ===== */
 .menage-total {
   margin-top: 0.5rem;
   padding: 0.5rem 0.75rem;
-  background: #FCDEDC;
+  background: var(--jadore-primary-light);
   border-radius: 6px;
   font-size: 0.85rem;
-  color: #1e293b;
+  color: var(--jadore-text);
 }
 
 .menage-total strong {
-  color: #1e293b;
+  color: var(--jadore-text);
 }
 
-/* Section par saison */
+/* ===== Section par saison ===== */
 .jadore-saison-section {
   margin-bottom: 2rem;
 }
@@ -65,22 +96,22 @@
 .jadore-saison-titre {
   font-size: 1.1rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--jadore-text);
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 2px solid #FCDEDC;
+  border-bottom: 2px solid var(--jadore-primary-light);
 }
 
-/* Rangée de blocs côte à côte */
+/* ===== Rangée de blocs ===== */
 .jadore-blocs-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
 
-/* Bloc individuel */
+/* ===== Bloc individuel ===== */
 .jadore-bloc {
-  background: #FCDEDC;
+  background: var(--jadore-primary-light);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -90,8 +121,8 @@
   font-size: 1rem;
   font-weight: 700;
   padding: 0.75rem;
-  background: #f0c4c0;
-  color: #1e293b;
+  background: var(--jadore-primary-medium);
+  color: var(--jadore-text);
   margin: 0;
 }
 
@@ -99,14 +130,14 @@
   padding: 0.75rem;
 }
 
-/* Ligne de données */
+/* ===== Lignes de données ===== */
 .jadore-ligne {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.3rem 0;
   font-size: 0.85rem;
-  color: #1e293b;
+  color: var(--jadore-text);
 }
 
 .jadore-label {
@@ -120,36 +151,35 @@
   margin-left: 0.5rem;
 }
 
-/* Ligne total */
 .jadore-ligne-total {
   padding-top: 0.4rem;
 }
 
-/* Séparateur */
+/* ===== Séparateurs ===== */
 .jadore-separateur {
   height: 1px;
-  background: #d4918c;
+  background: var(--jadore-primary);
   margin: 0.5rem 0;
 }
 
 .jadore-separateur-final {
   height: 2px;
-  background: #b87570;
+  background: var(--jadore-primary-dark);
   margin: 0.6rem 0;
 }
 
-/* Ligne gain final */
+/* ===== Ligne gain ===== */
 .jadore-ligne-gain {
   font-size: 0.95rem;
-  color: #1b5e20;
+  color: var(--jadore-success);
 }
 
 .jadore-ligne-gain .jadore-valeur {
-  color: #1b5e20;
+  color: var(--jadore-success);
   font-size: 1rem;
 }
 
-/* Responsive */
+/* ===== Responsive blocs ===== */
 @media (max-width: 1200px) {
   .jadore-blocs-row {
     grid-template-columns: repeat(2, 1fr);
@@ -162,7 +192,7 @@
   }
 }
 
-/* Slider taux de remplissage */
+/* ===== Slider taux de remplissage ===== */
 .slider-group {
   display: flex;
   align-items: center;
@@ -174,7 +204,7 @@
   -webkit-appearance: none;
   appearance: none;
   height: 6px;
-  background: #FCDEDC;
+  background: var(--jadore-primary-light);
   border-radius: 3px;
   outline: none;
   cursor: pointer;
@@ -186,7 +216,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #d4918c;
+  background: var(--jadore-primary);
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
@@ -196,7 +226,7 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: #d4918c;
+  background: var(--jadore-primary);
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 1px 3px rgba(0,0,0,0.2);
@@ -207,7 +237,7 @@
   width: 80px;
 }
 
-/* Bouton réglages avancés */
+/* ===== Bouton réglages avancés ===== */
 .btn-advanced-toggle {
   display: flex;
   align-items: center;
@@ -215,23 +245,23 @@
   margin-top: 0.75rem;
   padding: 0.35rem 0.6rem;
   background: none;
-  border: 1px solid #d4918c;
+  border: 1px solid var(--jadore-primary);
   border-radius: 6px;
-  color: #b87570;
+  color: var(--jadore-primary-dark);
   font-size: 0.75rem;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .btn-advanced-toggle:hover {
-  background: #FCDEDC;
-  color: #1e293b;
+  background: var(--jadore-primary-light);
+  color: var(--jadore-text);
 }
 
 .btn-advanced-toggle.active {
-  background: #FCDEDC;
-  color: #1e293b;
-  border-color: #b87570;
+  background: var(--jadore-primary-light);
+  color: var(--jadore-text);
+  border-color: var(--jadore-primary-dark);
 }
 
 .btn-advanced-toggle svg {
@@ -242,19 +272,19 @@
   transform: rotate(90deg);
 }
 
-/* Panneau réglages avancés */
+/* ===== Panneau réglages avancés ===== */
 .advanced-panel {
   margin-top: 0.75rem;
   padding: 0.75rem;
-  background: #fef8f7;
-  border: 1px solid #f0c4c0;
+  background: var(--jadore-primary-subtle);
+  border: 1px solid var(--jadore-primary-medium);
   border-radius: 8px;
 }
 
 .advanced-panel-title {
   font-size: 0.8rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--jadore-text);
   margin: 0.75rem 0 0.4rem 0;
 }
 
@@ -271,7 +301,7 @@
 .advanced-table th {
   text-align: center;
   font-weight: 600;
-  color: #64748b;
+  color: var(--jadore-text-muted);
   padding: 0.25rem 0.3rem;
   font-size: 0.7rem;
 }
@@ -283,7 +313,7 @@
 .advanced-table td {
   padding: 0.2rem 0.3rem;
   text-align: center;
-  color: #1e293b;
+  color: var(--jadore-text);
   white-space: nowrap;
 }
 
@@ -299,7 +329,7 @@
 .advanced-input {
   width: 52px;
   padding: 0.2rem 0.3rem;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--jadore-border);
   border-radius: 4px;
   text-align: center;
   font-size: 0.75rem;
@@ -308,29 +338,29 @@
 
 .advanced-input:focus {
   outline: none;
-  border-color: #d4918c;
+  border-color: var(--jadore-primary);
   box-shadow: 0 0 0 2px rgba(212, 145, 140, 0.2);
 }
 
 .advanced-total-row td {
-  border-top: 1px solid #d4918c;
+  border-top: 1px solid var(--jadore-primary);
   padding-top: 0.35rem;
   font-size: 0.75rem;
 }
 
 .advanced-warning {
-  color: #d32f2f;
+  color: var(--jadore-danger);
   font-size: 0.7rem;
   margin: 0.3rem 0 0 0;
   font-weight: 500;
 }
 
-/* Estimation annuelle */
+/* ===== Estimation annuelle ===== */
 .jadore-estimation {
   margin-top: 2rem;
 }
 
-/* Cartes CA */
+/* ===== Cartes CA ===== */
 .jadore-ca-cards {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -345,21 +375,21 @@
 }
 
 .jadore-ca-jadore {
-  background: #FCDEDC;
+  background: var(--jadore-primary-light);
 }
 
 .jadore-ca-client {
-  background: #e8f5e9;
+  background: var(--jadore-ca-client);
 }
 
 .jadore-ca-total {
-  background: #e3f2fd;
+  background: var(--jadore-ca-total);
 }
 
 .jadore-ca-label {
   font-size: 0.85rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--jadore-text-muted);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -368,17 +398,17 @@
 .jadore-ca-montant {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--jadore-text);
   font-variant-numeric: tabular-nums;
 }
 
 .jadore-ca-detail {
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--jadore-text-light);
   margin-top: 0.25rem;
 }
 
-/* Tableau de répartition */
+/* ===== Tableau de répartition ===== */
 .jadore-repartition-table-container {
   overflow-x: auto;
 }
@@ -390,12 +420,12 @@
 }
 
 .jadore-repartition-table th {
-  background: #FCDEDC;
-  color: #1e293b;
+  background: var(--jadore-primary-light);
+  color: var(--jadore-text);
   font-weight: 600;
   padding: 0.6rem 0.75rem;
   text-align: center;
-  border-bottom: 2px solid #f0c4c0;
+  border-bottom: 2px solid var(--jadore-primary-medium);
 }
 
 .jadore-repartition-table th:first-child {
@@ -405,8 +435,8 @@
 .jadore-repartition-table td {
   padding: 0.5rem 0.75rem;
   text-align: center;
-  color: #1e293b;
-  border-bottom: 1px solid #f1f5f9;
+  color: var(--jadore-text);
+  border-bottom: 1px solid var(--jadore-border-light);
 }
 
 .jadore-repartition-table td:first-child {
@@ -418,22 +448,22 @@
 }
 
 .jadore-repartition-total {
-  background: #fef2f1;
+  background: var(--jadore-primary-bg);
 }
 
 .jadore-repartition-total td {
-  border-top: 2px solid #d4918c;
+  border-top: 2px solid var(--jadore-primary);
   border-bottom: none;
 }
 
-/* Responsive cartes CA */
+/* ===== Responsive cartes CA ===== */
 @media (max-width: 768px) {
   .jadore-ca-cards {
     grid-template-columns: 1fr;
   }
 }
 
-/* Logo print et mention légale - cachés à l'écran */
+/* ===== Logo print et mention légale — cachés à l'écran ===== */
 .jadore-logo-print {
   display: none;
 }
@@ -442,7 +472,7 @@
   display: none;
 }
 
-/* Panneau avancé - caché à l'impression */
+/* ===== Panneau avancé — caché à l'impression ===== */
 @media print {
   .btn-advanced-toggle,
   .advanced-panel {
@@ -450,7 +480,7 @@
   }
 }
 
-/* Impression */
+/* ===== Impression ===== */
 @media print {
   .jadore-saison-section {
     page-break-inside: avoid;
@@ -468,7 +498,7 @@
   }
 
   .jadore-bloc {
-    border: 1px solid #FCDEDC;
+    border: 1px solid var(--jadore-primary-light);
   }
 
   .jadore-bloc-titre {
@@ -496,7 +526,7 @@
     text-align: center;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid #FCDEDC;
+    border-bottom: 2px solid var(--jadore-primary-light);
     width: 75%;
     margin-left: auto;
     margin-right: auto;
@@ -513,13 +543,13 @@
 
   .print-gite-name {
     font-size: 1.2rem;
-    color: #1e293b;
+    color: var(--jadore-text);
     margin-top: 0.25rem;
   }
 
   .print-date {
     font-size: 0.7rem;
-    color: #64748b;
+    color: var(--jadore-text-muted);
   }
 
   /* Estimation annuelle en impression */
