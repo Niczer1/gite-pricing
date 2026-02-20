@@ -1,4 +1,8 @@
 /**
+ * Copyright (c) 2026 Nico Hendriks — TVA BE0538.631.496
+ * Tous droits réservés / All rights reserved.
+ * Voir le fichier LICENSE pour plus de détails.
+ *
  * Jadore - Conciergerie Saisonnière
  *
  * Logique de calcul :
