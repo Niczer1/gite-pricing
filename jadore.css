@@ -207,6 +207,124 @@
   width: 80px;
 }
 
+/* Bouton réglages avancés */
+.btn-advanced-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+  padding: 0.35rem 0.6rem;
+  background: none;
+  border: 1px solid #d4918c;
+  border-radius: 6px;
+  color: #b87570;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-advanced-toggle:hover {
+  background: #FCDEDC;
+  color: #1e293b;
+}
+
+.btn-advanced-toggle.active {
+  background: #FCDEDC;
+  color: #1e293b;
+  border-color: #b87570;
+}
+
+.btn-advanced-toggle svg {
+  transition: transform 0.3s;
+}
+
+.btn-advanced-toggle.active svg {
+  transform: rotate(90deg);
+}
+
+/* Panneau réglages avancés */
+.advanced-panel {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #fef8f7;
+  border: 1px solid #f0c4c0;
+  border-radius: 8px;
+}
+
+.advanced-panel-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0.75rem 0 0.4rem 0;
+}
+
+.advanced-panel-title:first-child {
+  margin-top: 0;
+}
+
+.advanced-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+}
+
+.advanced-table th {
+  text-align: center;
+  font-weight: 600;
+  color: #64748b;
+  padding: 0.25rem 0.3rem;
+  font-size: 0.7rem;
+}
+
+.advanced-table th:first-child {
+  text-align: left;
+}
+
+.advanced-table td {
+  padding: 0.2rem 0.3rem;
+  text-align: center;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.advanced-table td:first-child {
+  text-align: left;
+}
+
+.advanced-label {
+  font-weight: 500;
+  font-size: 0.7rem;
+}
+
+.advanced-input {
+  width: 52px;
+  padding: 0.2rem 0.3rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  text-align: center;
+  font-size: 0.75rem;
+  background: white;
+}
+
+.advanced-input:focus {
+  outline: none;
+  border-color: #d4918c;
+  box-shadow: 0 0 0 2px rgba(212, 145, 140, 0.2);
+}
+
+.advanced-total-row td {
+  border-top: 1px solid #d4918c;
+  padding-top: 0.35rem;
+  font-size: 0.75rem;
+}
+
+.advanced-warning {
+  color: #d32f2f;
+  font-size: 0.7rem;
+  margin: 0.3rem 0 0 0;
+  font-weight: 500;
+}
+
 /* Estimation annuelle */
 .jadore-estimation {
   margin-top: 2rem;
@@ -322,6 +440,14 @@
 
 .jadore-print-disclaimer {
   display: none;
+}
+
+/* Panneau avancé - caché à l'impression */
+@media print {
+  .btn-advanced-toggle,
+  .advanced-panel {
+    display: none !important;
+  }
 }
 
 /* Impression */

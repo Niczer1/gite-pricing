@@ -53,7 +53,24 @@ function loadFromStorage() {
     try {
       const data = JSON.parse(saved);
       jadoreState = { ...jadoreState, ...data };
+
+      // Charger les réglages avancés
+      if (data.joursSaison) {
+        JOURS_PAR_SAISON = { ...JOURS_PAR_SAISON_DEFAULT, ...data.joursSaison };
+      }
+      if (data.weekendsSaison) {
+        WEEKENDS_PAR_SAISON = { ...WEEKENDS_PAR_SAISON_DEFAULT, ...data.weekendsSaison };
+      }
+      if (data.tauxBase) {
+        ['hs', 'ms', 'bs'].forEach(s => {
+          if (data.tauxBase[s]) {
+            TAUX_BASE[s] = { ...TAUX_BASE_DEFAULT[s], ...data.tauxBase[s] };
+          }
+        });
+      }
+
       updateFormFromState();
+      updateAdvancedFromState();
     } catch (e) {
       console.error('Erreur lors du chargement des données:', e);
     }
@@ -68,7 +85,10 @@ function saveToStorage() {
     tarifMenageHTVA: jadoreState.tarifMenageHTVA,
     fraisGestionPourcent: jadoreState.fraisGestionPourcent,
     tauxRemplissage: jadoreState.tauxRemplissage,
-    prixPoche: jadoreState.prixPoche
+    prixPoche: jadoreState.prixPoche,
+    joursSaison: JOURS_PAR_SAISON,
+    weekendsSaison: WEEKENDS_PAR_SAISON,
+    tauxBase: TAUX_BASE
   }));
 }
 
@@ -170,13 +190,13 @@ function initializeEventListeners() {
     calculerEstimation();
   });
   sliderInput.addEventListener('input', () => {
-    let val = Math.min(90, Math.max(20, parseFloat(sliderInput.value) || 20));
+    let val = Math.min(100, Math.max(20, parseFloat(sliderInput.value) || 20));
     slider.value = val;
     jadoreState.tauxRemplissage = val;
     calculerEstimation();
   });
   sliderInput.addEventListener('change', () => {
-    let val = Math.min(90, Math.max(20, parseFloat(sliderInput.value) || 20));
+    let val = Math.min(100, Math.max(20, parseFloat(sliderInput.value) || 20));
     sliderInput.value = val;
     slider.value = val;
     jadoreState.tauxRemplissage = val;
@@ -192,6 +212,75 @@ function initializeEventListeners() {
       calculer();
     });
   });
+
+  // Bouton réglages avancés (toggle)
+  const advBtn = document.getElementById('jadore-btn-advanced');
+  const advPanel = document.getElementById('jadore-advanced-panel');
+  advBtn.addEventListener('click', () => {
+    const visible = advPanel.style.display !== 'none';
+    advPanel.style.display = visible ? 'none' : 'block';
+    advBtn.classList.toggle('active', !visible);
+  });
+
+  // Écouteurs réglages avancés — calendrier
+  ['hs', 'ms', 'bs'].forEach(s => {
+    document.getElementById(`jadore-adv-jours-${s}`).addEventListener('change', () => {
+      readAdvancedValues();
+      saveToStorage();
+      calculer();
+    });
+    document.getElementById(`jadore-adv-we-${s}`).addEventListener('change', () => {
+      readAdvancedValues();
+      saveToStorage();
+      calculer();
+    });
+    // Écouteurs réglages avancés — taux de base
+    ['semaine', 'weekend', 'midweek'].forEach(t => {
+      document.getElementById(`jadore-adv-taux-${s}-${t}`).addEventListener('change', () => {
+        readAdvancedValues();
+        saveToStorage();
+        calculer();
+      });
+    });
+  });
+}
+
+// Lire les réglages avancés depuis le formulaire
+function readAdvancedValues() {
+  ['hs', 'ms', 'bs'].forEach(s => {
+    JOURS_PAR_SAISON[s] = parseInt(document.getElementById(`jadore-adv-jours-${s}`).value) || JOURS_PAR_SAISON_DEFAULT[s];
+    WEEKENDS_PAR_SAISON[s] = parseInt(document.getElementById(`jadore-adv-we-${s}`).value) || WEEKENDS_PAR_SAISON_DEFAULT[s];
+    TAUX_BASE[s].semaine = (parseFloat(document.getElementById(`jadore-adv-taux-${s}-semaine`).value) || 0) / 100;
+    TAUX_BASE[s].weekend = (parseFloat(document.getElementById(`jadore-adv-taux-${s}-weekend`).value) || 0) / 100;
+    TAUX_BASE[s].midweek = (parseFloat(document.getElementById(`jadore-adv-taux-${s}-midweek`).value) || 0) / 100;
+  });
+  updateAdvancedTotals();
+}
+
+// Mettre à jour les inputs avancés depuis l'état
+function updateAdvancedFromState() {
+  ['hs', 'ms', 'bs'].forEach(s => {
+    document.getElementById(`jadore-adv-jours-${s}`).value = JOURS_PAR_SAISON[s];
+    document.getElementById(`jadore-adv-we-${s}`).value = WEEKENDS_PAR_SAISON[s];
+    document.getElementById(`jadore-adv-taux-${s}-semaine`).value = Math.round(TAUX_BASE[s].semaine * 100);
+    document.getElementById(`jadore-adv-taux-${s}-weekend`).value = Math.round(TAUX_BASE[s].weekend * 100);
+    document.getElementById(`jadore-adv-taux-${s}-midweek`).value = Math.round(TAUX_BASE[s].midweek * 100);
+  });
+  updateAdvancedTotals();
+}
+
+// Mettre à jour les totaux et warnings du panneau avancé
+function updateAdvancedTotals() {
+  const totalJours = JOURS_PAR_SAISON.hs + JOURS_PAR_SAISON.ms + JOURS_PAR_SAISON.bs;
+  const totalWE = WEEKENDS_PAR_SAISON.hs + WEEKENDS_PAR_SAISON.ms + WEEKENDS_PAR_SAISON.bs;
+
+  document.getElementById('jadore-adv-total-jours').textContent = totalJours;
+  document.getElementById('jadore-adv-total-we').textContent = totalWE;
+
+  const warnJours = document.getElementById('jadore-adv-warning-jours');
+  const warnWE = document.getElementById('jadore-adv-warning-we');
+  warnJours.style.display = totalJours !== 365 ? 'block' : 'none';
+  warnWE.style.display = totalWE !== 52 ? 'block' : 'none';
 }
 
 // Réinitialiser aux valeurs par défaut
@@ -209,7 +298,16 @@ function resetToDefaults() {
     },
     resultats: null
   };
+
+  // Réinitialiser les réglages avancés
+  JOURS_PAR_SAISON = { ...JOURS_PAR_SAISON_DEFAULT };
+  WEEKENDS_PAR_SAISON = { ...WEEKENDS_PAR_SAISON_DEFAULT };
+  ['hs', 'ms', 'bs'].forEach(s => {
+    TAUX_BASE[s] = { ...TAUX_BASE_DEFAULT[s] };
+  });
+
   updateFormFromState();
+  updateAdvancedFromState();
   saveToStorage();
   calculer();
 }
@@ -405,64 +503,85 @@ function copyToClipboard() {
 // ESTIMATION ANNUELLE DU CA
 // ===================================
 
-// Données réelles de l'année par saison
-const JOURS_PAR_SAISON = { hs: 93, ms: 61, bs: 211 }; // = 365 jours
-const WEEKENDS_PAR_SAISON = { hs: 18, ms: 10, bs: 24 }; // = 52 weekends
-
-// Taux de remplissage de base (calibration réaliste)
-// Weekends se remplissent en premier, puis midweeks, puis semaines complètes
-const TAUX_BASE = {
+// Valeurs par défaut
+const JOURS_PAR_SAISON_DEFAULT = { hs: 93, ms: 61, bs: 211 };
+const WEEKENDS_PAR_SAISON_DEFAULT = { hs: 18, ms: 10, bs: 24 };
+const TAUX_BASE_DEFAULT = {
   hs: { semaine: 0.75, weekend: 1.00, midweek: 0.80 },
   ms: { semaine: 0.40, weekend: 0.80, midweek: 0.50 },
   bs: { semaine: 0.10, weekend: 0.40, midweek: 0.20 }
 };
 
+// Données modifiables (initialisées depuis les défauts, surchargées par localStorage)
+let JOURS_PAR_SAISON = { ...JOURS_PAR_SAISON_DEFAULT };
+let WEEKENDS_PAR_SAISON = { ...WEEKENDS_PAR_SAISON_DEFAULT };
+let TAUX_BASE = {
+  hs: { ...TAUX_BASE_DEFAULT.hs },
+  ms: { ...TAUX_BASE_DEFAULT.ms },
+  bs: { ...TAUX_BASE_DEFAULT.bs }
+};
+
 // Plafonds pour les taux après scaling
-const TAUX_PLAFOND = { semaine: 0.95, weekend: 1.00, midweek: 0.95 };
+const TAUX_PLAFOND = { semaine: 1.00, weekend: 1.00, midweek: 1.00 };
 
 /**
  * Calcule les réservations par saison et type en fonction du taux cible.
- * Algorithme itératif qui scale les taux de base pour atteindre le nombre de nuits cible.
+ * Recherche binaire sur un facteur d'échelle appliqué aux taux de base.
+ * Le facteur est unique et croissant → garantit la monotonie.
  */
 function calculerRepartition(tauxCiblePct) {
-  const nuitsCibles = Math.round(365 * tauxCiblePct / 100);
+  const totalJours = JOURS_PAR_SAISON.hs + JOURS_PAR_SAISON.ms + JOURS_PAR_SAISON.bs;
+  const nuitsCibles = Math.round(totalJours * tauxCiblePct / 100);
 
-  // Copier les taux de base
-  let tauxActuels = {};
+  // Borne supérieure dynamique : 1 / plus petit taux de base (pour que tout puisse atteindre 100%)
+  let minTaux = 1;
   ['hs', 'ms', 'bs'].forEach(s => {
-    tauxActuels[s] = { ...TAUX_BASE[s] };
+    ['semaine', 'weekend', 'midweek'].forEach(t => {
+      if (TAUX_BASE[s][t] > 0) minTaux = Math.min(minTaux, TAUX_BASE[s][t]);
+    });
   });
+  let lo = 0, hi = Math.ceil(1 / minTaux) + 2;
+  let bestResult = null;
+  let bestDiff = Infinity;
 
-  // Itérer pour ajuster le facteur d'échelle
-  for (let iter = 0; iter < 20; iter++) {
-    const result = simulerReservations(tauxActuels);
-    const nuitsCalculees = result.totalNuits;
+  for (let iter = 0; iter < 60; iter++) {
+    const mid = (lo + hi) / 2;
 
-    if (Math.abs(nuitsCalculees - nuitsCibles) <= 1) break;
-
-    const facteur = nuitsCibles / Math.max(nuitsCalculees, 1);
-
-    // Appliquer le facteur avec plafonds
+    // Appliquer le facteur aux taux de base avec plafonds
+    const tauxActuels = {};
     ['hs', 'ms', 'bs'].forEach(s => {
+      tauxActuels[s] = {};
       ['semaine', 'weekend', 'midweek'].forEach(t => {
-        tauxActuels[s][t] = Math.min(
-          tauxActuels[s][t] * facteur,
-          TAUX_PLAFOND[t]
-        );
+        tauxActuels[s][t] = Math.min(TAUX_BASE[s][t] * mid, TAUX_PLAFOND[t]);
       });
     });
+
+    const result = simulerReservations(tauxActuels);
+    const diff = result.totalNuits - nuitsCibles;
+
+    // Garder le meilleur résultat (préférer >= cible si même écart)
+    if (Math.abs(diff) < Math.abs(bestDiff) ||
+        (Math.abs(diff) === Math.abs(bestDiff) && diff >= 0 && bestDiff < 0)) {
+      bestResult = result;
+      bestDiff = diff;
+    }
+
+    if (result.totalNuits < nuitsCibles) lo = mid;
+    else if (result.totalNuits > nuitsCibles) hi = mid;
+    else break;
   }
 
-  return simulerReservations(tauxActuels);
+  return bestResult;
 }
 
 /**
  * Simule les réservations en respectant la logique de priorité :
- * 1. Semaines complètes (7n) → consomment 1 créneau WE + 1 créneau MW
- * 2. Weekends (2n) dans les créneaux restants
- * 3. Midweeks (4n) dans les créneaux restants
+ * 1. Semaines complètes (7n) → consomment 1 créneau WE
+ * 2. Weekends (2n) dans les créneaux restants, capés par les jours restants
+ * 3. Midweeks (4n) dans les jours restants
  *
  * Le nombre de créneaux par saison = nombre de weekends disponibles.
+ * Contrainte : nuits par saison ≤ jours par saison.
  */
 function simulerReservations(taux) {
   const repartition = {};
@@ -473,19 +592,21 @@ function simulerReservations(taux) {
     const joursSaison = JOURS_PAR_SAISON[saison];
     const t = taux[saison];
 
-    // 1. Semaines complètes (bloquent 1 WE + 1 MW)
-    const nbSemaines = Math.round(nbCreneaux * t.semaine);
+    // 1. Semaines complètes (capées par créneaux et jours disponibles)
+    const maxSemaines = Math.floor(joursSaison / 7);
+    let nbSemaines = Math.min(Math.round(nbCreneaux * t.semaine), maxSemaines);
 
-    // Créneaux restants pour WE et MW séparés
-    const restant = nbCreneaux - nbSemaines;
+    // 2. Weekends dans les créneaux restants, capés par jours restants
+    const creneauxRestants = nbCreneaux - nbSemaines;
+    const joursApresSemaines = joursSaison - nbSemaines * 7;
+    const maxWeekends = Math.min(creneauxRestants, Math.floor(joursApresSemaines / 2));
+    let nbWeekends = Math.min(Math.round(creneauxRestants * t.weekend), maxWeekends);
 
-    // 2. Weekends dans les créneaux restants
-    const nbWeekends = Math.round(restant * t.weekend);
+    // 3. Midweeks basés sur les jours restants
+    const joursRestants = joursSaison - nbSemaines * 7 - nbWeekends * 2;
+    const maxMidweeks = Math.max(0, Math.floor(joursRestants / 4));
+    let nbMidweeks = Math.min(Math.round(maxMidweeks * t.midweek), maxMidweeks);
 
-    // 3. Midweeks dans les créneaux restants
-    const nbMidweeks = Math.round(restant * t.midweek);
-
-    // Calcul des nuits
     const nuitsSaison = nbSemaines * 7 + nbWeekends * 2 + nbMidweeks * 4;
 
     repartition[saison] = {
@@ -493,7 +614,7 @@ function simulerReservations(taux) {
       weekend: nbWeekends,
       midweek: nbMidweeks,
       nuits: nuitsSaison,
-      taux: Math.round(nuitsSaison / joursSaison * 100)
+      taux: Math.min(Math.round(nuitsSaison / joursSaison * 100), 100)
     };
 
     totalNuits += nuitsSaison;

@@ -744,6 +744,11 @@ tr.total-row td {
 
   body {
     font-size: 10px;
+    background: white !important;
+  }
+
+  .app-container {
+    background: white !important;
   }
 
   .app-nav,
