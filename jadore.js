@@ -190,13 +190,13 @@ function initializeEventListeners() {
     calculerEstimation();
   });
   sliderInput.addEventListener('input', () => {
-    let val = Math.min(100, Math.max(20, parseFloat(sliderInput.value) || 20));
+    let val = Math.min(98, Math.max(20, parseFloat(sliderInput.value) || 20));
     slider.value = val;
     jadoreState.tauxRemplissage = val;
     calculerEstimation();
   });
   sliderInput.addEventListener('change', () => {
-    let val = Math.min(100, Math.max(20, parseFloat(sliderInput.value) || 20));
+    let val = Math.min(98, Math.max(20, parseFloat(sliderInput.value) || 20));
     sliderInput.value = val;
     slider.value = val;
     jadoreState.tauxRemplissage = val;
@@ -507,9 +507,9 @@ function copyToClipboard() {
 const JOURS_PAR_SAISON_DEFAULT = { hs: 93, ms: 61, bs: 211 };
 const WEEKENDS_PAR_SAISON_DEFAULT = { hs: 18, ms: 10, bs: 24 };
 const TAUX_BASE_DEFAULT = {
-  hs: { semaine: 0.75, weekend: 1.00, midweek: 0.80 },
-  ms: { semaine: 0.40, weekend: 0.80, midweek: 0.50 },
-  bs: { semaine: 0.10, weekend: 0.40, midweek: 0.20 }
+  hs: { semaine: 0.15, weekend: 1.00, midweek: 0.80 },
+  ms: { semaine: 0.15, weekend: 0.80, midweek: 0.30 },
+  bs: { semaine: 0.05, weekend: 0.70, midweek: 0.20 }
 };
 
 // Données modifiables (initialisées depuis les défauts, surchargées par localStorage)
