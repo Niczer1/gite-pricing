@@ -516,9 +516,9 @@ function copyToClipboard() {
 const JOURS_PAR_SAISON_DEFAULT = { hs: 93, ms: 61, bs: 211 };
 const WEEKENDS_PAR_SAISON_DEFAULT = { hs: 18, ms: 10, bs: 24 };
 const TAUX_BASE_DEFAULT = {
-  hs: { semaine: 0.15, weekend: 1.00, midweek: 0.80 },
-  ms: { semaine: 0.15, weekend: 0.80, midweek: 0.30 },
-  bs: { semaine: 0.05, weekend: 0.70, midweek: 0.20 }
+  hs: { semaine: 0.15, weekend: 0.60, midweek: 0.50 },
+  ms: { semaine: 0.10, weekend: 0.45, midweek: 0.30 },
+  bs: { semaine: 0.05, weekend: 0.40, midweek: 0.20 }
 };
 
 // Données modifiables (initialisées depuis les défauts, surchargées par localStorage)
