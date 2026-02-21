@@ -139,6 +139,9 @@ function initializeEventListeners() {
   // Bouton réinitialiser
   document.getElementById('btn-reset').addEventListener('click', resetToDefaults);
 
+  // Bouton synchroniser
+  document.getElementById('btn-sync').addEventListener('click', syncToJadore);
+
   // Boutons d'export
   document.getElementById('btn-copy').addEventListener('click', copyToClipboard);
   document.getElementById('btn-export-csv').addEventListener('click', exportCSV);
@@ -661,4 +664,44 @@ function exportCSV() {
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+}
+
+// Synchroniser vers Jadore
+function syncToJadore() {
+  readFormValues();
+  saveToStorage();
+
+  // Lire l'état actuel de Jadore depuis localStorage
+  const jadoreRaw = localStorage.getItem('jadorePricingState');
+  const jadoreData = jadoreRaw ? JSON.parse(jadoreRaw) : {};
+
+  // Syncer nom du gîte
+  jadoreData.nomGite = appState.nomGite;
+
+  // Syncer nettoyage TVAC → heures ménage
+  const tarifHTVA = jadoreData.tarifMenageHTVA || 35;
+  jadoreData.heuresMenage = Math.round((appState.nettoyage / (tarifHTVA * 1.21)) * 100) / 100;
+
+  // Syncer prix souhaités (4 types)
+  if (!jadoreData.prixPoche) jadoreData.prixPoche = {};
+  ['bs', 'ms', 'hs'].forEach(s => {
+    if (!jadoreData.prixPoche[s]) jadoreData.prixPoche[s] = {};
+    jadoreData.prixPoche[s].weekend = appState.prixPoche[s].weekend;
+    jadoreData.prixPoche[s].longweekend = appState.prixPoche[s].longweekend;
+    jadoreData.prixPoche[s].midweek = appState.prixPoche[s].midweek;
+    jadoreData.prixPoche[s].semaine = appState.prixPoche[s].semaine;
+  });
+
+  // Sauvegarder
+  localStorage.setItem('jadorePricingState', JSON.stringify(jadoreData));
+
+  // Feedback visuel
+  const btn = document.getElementById('btn-sync');
+  const originalText = btn.textContent;
+  btn.textContent = '\u2713 Synchronis\u00e9 !';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }, 2000);
 }

@@ -21,9 +21,9 @@ let jadoreState = {
   fraisGestionPourcent: 18,
   tauxRemplissage: 65,
   prixPoche: {
-    bs: { weekend: 1500, midweek: 1500, semaine: 2500 },
-    ms: { weekend: 1800, midweek: 1600, semaine: 3000 },
-    hs: { weekend: 2000, midweek: 2000, semaine: 3500 }
+    bs: { weekend: 1500, longweekend: 1800, midweek: 1500, semaine: 2500 },
+    ms: { weekend: 1800, longweekend: 2200, midweek: 1600, semaine: 3000 },
+    hs: { weekend: 2000, longweekend: 2500, midweek: 2000, semaine: 3500 }
   },
   resultats: null
 };
@@ -107,6 +107,7 @@ function updateFormFromState() {
 
   ['bs', 'ms', 'hs'].forEach(saison => {
     document.getElementById(`jadore-${saison}-weekend`).value = jadoreState.prixPoche[saison].weekend;
+    document.getElementById(`jadore-${saison}-longweekend`).value = jadoreState.prixPoche[saison].longweekend;
     document.getElementById(`jadore-${saison}-midweek`).value = jadoreState.prixPoche[saison].midweek;
     document.getElementById(`jadore-${saison}-semaine`).value = jadoreState.prixPoche[saison].semaine;
   });
@@ -124,6 +125,7 @@ function readFormValues() {
 
   ['bs', 'ms', 'hs'].forEach(saison => {
     jadoreState.prixPoche[saison].weekend = parseFloat(document.getElementById(`jadore-${saison}-weekend`).value) || 0;
+    jadoreState.prixPoche[saison].longweekend = parseFloat(document.getElementById(`jadore-${saison}-longweekend`).value) || 0;
     jadoreState.prixPoche[saison].midweek = parseFloat(document.getElementById(`jadore-${saison}-midweek`).value) || 0;
     jadoreState.prixPoche[saison].semaine = parseFloat(document.getElementById(`jadore-${saison}-semaine`).value) || 0;
   });
@@ -152,6 +154,9 @@ function initializeEventListeners() {
   // Bouton réinitialiser
   document.getElementById('jadore-btn-reset').addEventListener('click', resetToDefaults);
 
+  // Bouton synchroniser
+  document.getElementById('jadore-btn-sync').addEventListener('click', syncToGitePricing);
+
   // Boutons d'export
   document.getElementById('jadore-btn-copy').addEventListener('click', copyToClipboard);
   document.getElementById('jadore-btn-print').addEventListener('click', () => window.print());
@@ -171,7 +176,7 @@ function initializeEventListeners() {
 
   // Écouteurs pour les champs de prix
   ['bs', 'ms', 'hs'].forEach(saison => {
-    ['weekend', 'midweek', 'semaine'].forEach(type => {
+    ['weekend', 'longweekend', 'midweek', 'semaine'].forEach(type => {
       document.getElementById(`jadore-${saison}-${type}`).addEventListener('change', () => {
         readFormValues();
         saveToStorage();
@@ -296,9 +301,9 @@ function resetToDefaults() {
     fraisGestionPourcent: 18,
     tauxRemplissage: 65,
     prixPoche: {
-      bs: { weekend: 1500, midweek: 1500, semaine: 2500 },
-      ms: { weekend: 1800, midweek: 1600, semaine: 3000 },
-      hs: { weekend: 2000, midweek: 2000, semaine: 3500 }
+      bs: { weekend: 1500, longweekend: 1800, midweek: 1500, semaine: 2500 },
+      ms: { weekend: 1800, longweekend: 2200, midweek: 1600, semaine: 3000 },
+      hs: { weekend: 2000, longweekend: 2500, midweek: 2000, semaine: 3500 }
     },
     resultats: null
   };
@@ -794,4 +799,43 @@ function generateTextReport() {
   text += `  CA Total Maison: ${formatPrixEntier(caT).padStart(12)}\n`;
 
   return text;
+}
+
+// Synchroniser vers Gîte Pricing
+function syncToGitePricing() {
+  readFormValues();
+  saveToStorage();
+
+  // Lire l'état actuel de Gîte Pricing depuis localStorage
+  const giteRaw = localStorage.getItem('gitePricingState');
+  const giteData = giteRaw ? JSON.parse(giteRaw) : {};
+
+  // Syncer nom du gîte
+  giteData.nomGite = jadoreState.nomGite;
+
+  // Syncer ménage → nettoyage TVAC
+  giteData.nettoyage = Math.round(jadoreState.heuresMenage * jadoreState.tarifMenageHTVA * 1.21 * 100) / 100;
+
+  // Syncer prix souhaités (4 types)
+  if (!giteData.prixPoche) giteData.prixPoche = {};
+  ['bs', 'ms', 'hs'].forEach(s => {
+    if (!giteData.prixPoche[s]) giteData.prixPoche[s] = {};
+    giteData.prixPoche[s].weekend = jadoreState.prixPoche[s].weekend;
+    giteData.prixPoche[s].longweekend = jadoreState.prixPoche[s].longweekend;
+    giteData.prixPoche[s].midweek = jadoreState.prixPoche[s].midweek;
+    giteData.prixPoche[s].semaine = jadoreState.prixPoche[s].semaine;
+  });
+
+  // Sauvegarder
+  localStorage.setItem('gitePricingState', JSON.stringify(giteData));
+
+  // Feedback visuel
+  const btn = document.getElementById('jadore-btn-sync');
+  const originalText = btn.textContent;
+  btn.textContent = '\u2713 Synchronis\u00e9 !';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }, 2000);
 }
