@@ -434,6 +434,8 @@ function afficherResultats() {
   });
 
   afficherTableauRecap();
+  afficherTableauRecapPoche();
+  afficherTableauRecapNatuurhuisje();
 }
 
 // Formater un prix
@@ -652,6 +654,108 @@ function afficherTableauRecap() {
   container.innerHTML = html;
 }
 
+// Afficher le tableau récapitulatif "Prix en poche" (sans distinction plateforme)
+function afficherTableauRecapPoche() {
+  const resultats = appState.resultats;
+  const container = document.getElementById('table-recap-poche');
+
+  const sejours = [
+    { key: 'weekend', label: 'Weekend' },
+    { key: 'longweekend', label: 'Long Weekend' },
+    { key: 'midweek', label: 'Midweek' },
+    { key: 'semaine', label: 'Semaine' }
+  ];
+
+  // Calculer la moyenne du poche semaine sur les 3 plateformes
+  function pocheSemaineMoyenne(saison) {
+    let total = 0;
+    PLATEFORMES.forEach(p => {
+      total += resultats[saison].prixSejours[p].pocheSemaine;
+    });
+    return Math.round(total / PLATEFORMES.length);
+  }
+
+  let html = `
+    <table class="recap-table">
+      <thead>
+        <tr>
+          <th></th>
+          ${sejours.map(s => `<th>${s.label}</th>`).join('')}
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  ['bs', 'ms', 'hs'].forEach(saison => {
+    const poche = appState.prixPoche[saison];
+    const pocheSem = pocheSemaineMoyenne(saison);
+
+    html += `
+      <tr>
+        <td><strong>${SAISONS[saison]}</strong></td>
+        <td>${formatPrix(poche.weekend)}</td>
+        <td>${formatPrix(poche.longweekend)}</td>
+        <td>${formatPrix(poche.midweek)}</td>
+        <td>${formatPrix(pocheSem)}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+    <p class="table-note">Semaine : moyenne arrondie des 3 plateformes (varie légèrement selon la commission)</p>
+  `;
+
+  container.innerHTML = html;
+}
+
+// Afficher le tableau Natuurhuisje — Prix à encoder par saison
+function afficherTableauRecapNatuurhuisje() {
+  const resultats = appState.resultats;
+  const container = document.getElementById('table-recap-natuurhuisje');
+
+  const lignes = [
+    { label: 'Prix / nuit (1 nuit midweek)', getData: (saison) => resultats[saison].estimations.natuurhuisje['1nuitMidweek'].totalAffiche },
+    { label: 'Weekend (2 nuits)', getData: (saison) => resultats[saison].prixSejours.natuurhuisje.weekend },
+    { label: 'Long Weekend (3 nuits)', getData: (saison) => resultats[saison].prixSejours.natuurhuisje.longweekend },
+    { label: 'Midweek (4 nuits)', getData: (saison) => resultats[saison].prixSejours.natuurhuisje.midweek },
+    { label: 'Semaine (7 nuits)', getData: (saison) => resultats[saison].prixSejours.natuurhuisje.semaine }
+  ];
+
+  let html = `
+    <table class="recap-table">
+      <thead>
+        <tr>
+          <th>Type de séjour</th>
+          <th class="season-header bs">Basse Saison</th>
+          <th class="season-header ms">Moyenne Saison</th>
+          <th class="season-header hs">Haute Saison</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+
+  lignes.forEach(ligne => {
+    html += `
+      <tr>
+        <td><strong>${ligne.label}</strong></td>
+        <td class="row-bs">${formatPrix(ligne.getData('bs'))}</td>
+        <td class="row-ms">${formatPrix(ligne.getData('ms'))}</td>
+        <td class="row-hs">${formatPrix(ligne.getData('hs'))}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+      </tbody>
+    </table>
+    <p class="table-note">Prix totaux que le client paie (commission Natuurhuisje incluse)</p>
+  `;
+
+  container.innerHTML = html;
+}
+
 // Copier dans le presse-papier
 function copyToClipboard() {
   const text = generateTextReport();
@@ -711,6 +815,19 @@ function generateTextReport() {
     text += '\n';
   });
 
+  // Tableau récapitulatif en poche
+  text += 'RÉCAPITULATIF EN POCHE\n';
+  text += '-'.repeat(50) + '\n';
+  text += `${''.padEnd(18)}${'Weekend'.padStart(10)}${'Long WE'.padStart(10)}${'Midweek'.padStart(10)}${'Semaine'.padStart(10)}\n`;
+  ['bs', 'ms', 'hs'].forEach(saison => {
+    const poche = appState.prixPoche[saison];
+    let pocheSemTotal = 0;
+    PLATEFORMES.forEach(p => { pocheSemTotal += appState.resultats[saison].prixSejours[p].pocheSemaine; });
+    const pocheSem = Math.round(pocheSemTotal / PLATEFORMES.length);
+    text += `  ${SAISONS[saison].padEnd(16)}${formatPrix(poche.weekend).padStart(10)}${formatPrix(poche.longweekend).padStart(10)}${formatPrix(poche.midweek).padStart(10)}${formatPrix(pocheSem).padStart(10)}\n`;
+  });
+  text += '\n';
+
   return text;
 }
 
@@ -755,6 +872,17 @@ function exportCSV() {
     estItems.forEach(({ id, label }) => {
       csv += `${nomSaison};Estimation;${label};;${data.estimations.booking[id].totalAffiche};${data.estimations.airbnb[id].totalAffiche};${data.estimations.natuurhuisje[id].totalAffiche};${Math.round(data.estimations.booking[id].poche)};${Math.round(data.estimations.airbnb[id].poche)};${Math.round(data.estimations.natuurhuisje[id].poche)}\n`;
     });
+  });
+
+  // Récapitulatif en poche
+  csv += '\nRécapitulatif en poche\n';
+  csv += 'Saison;Weekend;Long Weekend;Midweek;Semaine\n';
+  ['bs', 'ms', 'hs'].forEach(saison => {
+    const poche = appState.prixPoche[saison];
+    let pocheSemTotal = 0;
+    PLATEFORMES.forEach(p => { pocheSemTotal += appState.resultats[saison].prixSejours[p].pocheSemaine; });
+    const pocheSem = Math.round(pocheSemTotal / PLATEFORMES.length);
+    csv += `${SAISONS[saison]};${poche.weekend};${poche.longweekend};${poche.midweek};${pocheSem}\n`;
   });
 
   // Télécharger le fichier
