@@ -31,9 +31,9 @@ let appState = {
     semaine: 0
   },
   prixPoche: {
-    bs: { weekend: 1500, longweekend: 1800, midweek: 1500, semaine: 2500 },
-    ms: { weekend: 1800, longweekend: 2200, midweek: 1600, semaine: 3000 },
-    hs: { weekend: 2000, longweekend: 2500, midweek: 2000, semaine: 3500 }
+    bs: { weekend: 1500, longweekend: 1800, midweek: 1500 },
+    ms: { weekend: 1800, longweekend: 2200, midweek: 1600 },
+    hs: { weekend: 2000, longweekend: 2500, midweek: 2000 }
   },
   resultats: null
 };
@@ -70,6 +70,12 @@ function loadFromStorage() {
       if (!appState.reductions || typeof appState.reductions.midweek === 'undefined') {
         appState.reductions = { midweek: 0, semaine: 0 };
       }
+      // Migration : supprimer semaine des prixPoche (maintenant calculé automatiquement)
+      ['bs', 'ms', 'hs'].forEach(s => {
+        if (appState.prixPoche[s]) {
+          delete appState.prixPoche[s].semaine;
+        }
+      });
       updateFormFromState();
     } catch (e) {
       console.error('Erreur lors du chargement des données:', e);
@@ -104,7 +110,6 @@ function updateFormFromState() {
     document.getElementById(`${saison}-weekend`).value = appState.prixPoche[saison].weekend;
     document.getElementById(`${saison}-longweekend`).value = appState.prixPoche[saison].longweekend;
     document.getElementById(`${saison}-midweek`).value = appState.prixPoche[saison].midweek;
-    document.getElementById(`${saison}-semaine`).value = appState.prixPoche[saison].semaine;
   });
 }
 
@@ -123,7 +128,6 @@ function readFormValues() {
     appState.prixPoche[saison].weekend = parseFloat(document.getElementById(`${saison}-weekend`).value) || 0;
     appState.prixPoche[saison].longweekend = parseFloat(document.getElementById(`${saison}-longweekend`).value) || 0;
     appState.prixPoche[saison].midweek = parseFloat(document.getElementById(`${saison}-midweek`).value) || 0;
-    appState.prixPoche[saison].semaine = parseFloat(document.getElementById(`${saison}-semaine`).value) || 0;
   });
 }
 
@@ -157,7 +161,7 @@ function initializeEventListeners() {
 
   // Écouteurs pour les champs de prix
   ['bs', 'ms', 'hs'].forEach(saison => {
-    ['weekend', 'longweekend', 'midweek', 'semaine'].forEach(type => {
+    ['weekend', 'longweekend', 'midweek'].forEach(type => {
       document.getElementById(`${saison}-${type}`).addEventListener('change', () => {
         readFormValues();
         saveToStorage();
@@ -210,9 +214,9 @@ function resetToDefaults() {
       semaine: 0
     },
     prixPoche: {
-      bs: { weekend: 1500, longweekend: 1800, midweek: 1500, semaine: 2500 },
-      ms: { weekend: 1800, longweekend: 2200, midweek: 1600, semaine: 3000 },
-      hs: { weekend: 2000, longweekend: 2500, midweek: 2000, semaine: 3500 }
+      bs: { weekend: 1500, longweekend: 1800, midweek: 1500 },
+      ms: { weekend: 1800, longweekend: 2200, midweek: 1600 },
+      hs: { weekend: 2000, longweekend: 2500, midweek: 2000 }
     },
     resultats: null
   };
@@ -268,13 +272,11 @@ function calculer() {
       const weekendTotalAffiche = calculerPrixAffiche(prixPoche.weekend, commission);
       const longweekendTotalAffiche = calculerPrixAffiche(prixPoche.longweekend, commission);
       const midweekTotalAffiche = calculerPrixAffiche(prixPoche.midweek, commission);
-      const semaineTotalAffiche = calculerPrixAffiche(prixPoche.semaine, commission);
 
       // Prix des nuits affiché = prix total - nettoyage (le nettoyage est déjà en prix affiché)
       const weekendNuitsAffiche = weekendTotalAffiche - nettoyageAffiche;
       const longweekendNuitsAffiche = longweekendTotalAffiche - nettoyageAffiche;
       const midweekNuitsAffiche = midweekTotalAffiche - nettoyageAffiche;
-      const semaineNuitsAffiche = semaineTotalAffiche - nettoyageAffiche;
 
       // Prix par nuit (basé sur le prix des nuits, sans nettoyage)
       // Weekend = 2 nuits (ven + sam)
@@ -291,21 +293,27 @@ function calculer() {
         ? arrondir((midweekNuitsAffiche / (1 - reductionMidweek / 100)) / 4)
         : arrondir(midweekNuitsAffiche / 4);
 
-      // Prix théoriques des nuits (somme des nuits, sans réduction)
+      // Prix théoriques (plein tarif par nuit, sans réduction séjour)
       const midweekTheorique = prixLunJeu * 4;
-      const semaineTheorique = (prixVenSam * 2) + (prixLunJeu * 4) + prixDimanche;
+      const midweekTotalTheorique = midweekTheorique + nettoyageAffiche;
 
-      // Appliquer la réduction semaine sur le prix théorique
+      // Semaine calculée automatiquement depuis les prix par nuit
+      // semaineTheorique = somme des 7 nuits au plein tarif (sans réduction)
+      const semaineTheorique = (prixVenSam * 2) + (prixLunJeu * 4) + prixDimanche;
+      // semaineNuitsReduit = avec réduction semaine appliquée
       const semaineNuitsReduit = reductionSemaine > 0
         ? arrondir(semaineTheorique * (1 - reductionSemaine / 100))
-        : semaineNuitsAffiche;
-      const semaineTotalFinal = semaineNuitsReduit + nettoyageAffiche;
-      const pocheSemaineFinal = calculerPrixPoche(semaineTotalFinal, commission);
+        : semaineTheorique;
+      // Prix total affiché = nuits réduites + nettoyage
+      const semaineTotalAffiche = semaineNuitsReduit + nettoyageAffiche;
+      const semaineTotalTheorique = semaineTheorique + nettoyageAffiche;
 
-      // Prix "en poche" = ce que vous avez demandé (inchangé)
+      // Prix "en poche" = ce que vous avez demandé (toujours inchangé pour weekend/longweekend/midweek)
       const pocheWeekend = prixPoche.weekend;
       const pocheLongweekend = prixPoche.longweekend;
       const pocheMidweek = prixPoche.midweek;
+      // Semaine en poche = calculé automatiquement
+      const pocheSemaine = calculerPrixPoche(semaineTotalAffiche, commission);
 
       // Estimations courtes durées (prix affiché + prix en poche)
       const estimations = [
@@ -335,15 +343,15 @@ function calculer() {
         weekend: weekendTotalAffiche,
         longweekend: longweekendTotalAffiche,
         midweek: midweekTotalAffiche,
-        semaine: semaineTotalFinal,
+        semaine: semaineTotalAffiche,
         pocheWeekend: pocheWeekend,
         pocheLongweekend: pocheLongweekend,
         pocheMidweek: pocheMidweek,
-        pocheSemaine: pocheSemaineFinal,
+        pocheSemaine: pocheSemaine,
         reductionMidweek: reductionMidweek,
         reductionSemaine: reductionSemaine,
-        midweekTheorique: midweekTheorique,
-        semaineTheorique: semaineTheorique
+        midweekTotalTheorique: midweekTotalTheorique,
+        semaineTotalTheorique: semaineTotalTheorique
       };
     });
   });
@@ -433,6 +441,14 @@ function formatPrix(prix) {
   return Math.round(prix).toLocaleString('fr-FR') + ' €';
 }
 
+// Formater un prix avec prix théorique barré (si réduction active)
+function formatPrixAvecTheorique(prix, theorique, hasReduction) {
+  if (hasReduction && theorique > prix) {
+    return `<span class="prix-theorique">${formatPrix(theorique)}</span> ${formatPrix(prix)}`;
+  }
+  return formatPrix(prix);
+}
+
 // Afficher le tableau des prix par nuit
 function afficherTableauNuit(saison) {
   const data = appState.resultats[saison];
@@ -520,9 +536,9 @@ function afficherTableauSejour(saison) {
         <tr>
           <td class="reduction-cell ${reductionMidweek <= 0 ? 'no-reduction' : ''}">${reductionMidweek}%</td>
           <td>Midweek (4 nuits)</td>
-          <td>${formatPrix(data.prixSejours.booking.midweek)}</td>
-          <td>${formatPrix(data.prixSejours.airbnb.midweek)}</td>
-          <td>${formatPrix(data.prixSejours.natuurhuisje.midweek)}</td>
+          <td>${formatPrixAvecTheorique(data.prixSejours.booking.midweek, data.prixSejours.booking.midweekTotalTheorique, reductionMidweek > 0)}</td>
+          <td>${formatPrixAvecTheorique(data.prixSejours.airbnb.midweek, data.prixSejours.airbnb.midweekTotalTheorique, reductionMidweek > 0)}</td>
+          <td>${formatPrixAvecTheorique(data.prixSejours.natuurhuisje.midweek, data.prixSejours.natuurhuisje.midweekTotalTheorique, reductionMidweek > 0)}</td>
           <td class="poche-cell">${formatPrix(data.prixSejours.booking.pocheMidweek)}</td>
           <td class="poche-cell">${formatPrix(data.prixSejours.airbnb.pocheMidweek)}</td>
           <td class="poche-cell">${formatPrix(data.prixSejours.natuurhuisje.pocheMidweek)}</td>
@@ -530,9 +546,9 @@ function afficherTableauSejour(saison) {
         <tr>
           <td class="reduction-cell ${reductionSemaine <= 0 ? 'no-reduction' : ''}">${reductionSemaine}%</td>
           <td>Semaine (7 nuits)</td>
-          <td>${formatPrix(data.prixSejours.booking.semaine)}</td>
-          <td>${formatPrix(data.prixSejours.airbnb.semaine)}</td>
-          <td>${formatPrix(data.prixSejours.natuurhuisje.semaine)}</td>
+          <td>${formatPrixAvecTheorique(data.prixSejours.booking.semaine, data.prixSejours.booking.semaineTotalTheorique, reductionSemaine > 0)}</td>
+          <td>${formatPrixAvecTheorique(data.prixSejours.airbnb.semaine, data.prixSejours.airbnb.semaineTotalTheorique, reductionSemaine > 0)}</td>
+          <td>${formatPrixAvecTheorique(data.prixSejours.natuurhuisje.semaine, data.prixSejours.natuurhuisje.semaineTotalTheorique, reductionSemaine > 0)}</td>
           <td class="poche-cell">${formatPrix(data.prixSejours.booking.pocheSemaine)}</td>
           <td class="poche-cell">${formatPrix(data.prixSejours.airbnb.pocheSemaine)}</td>
           <td class="poche-cell">${formatPrix(data.prixSejours.natuurhuisje.pocheSemaine)}</td>
@@ -779,7 +795,10 @@ function syncToJadore() {
     jadoreData.prixPoche[s].weekend = appState.prixPoche[s].weekend;
     jadoreData.prixPoche[s].longweekend = appState.prixPoche[s].longweekend;
     jadoreData.prixPoche[s].midweek = appState.prixPoche[s].midweek;
-    jadoreData.prixPoche[s].semaine = appState.prixPoche[s].semaine;
+    // Semaine : synchroniser la valeur calculée si des résultats existent
+    if (appState.resultats && appState.resultats[s]) {
+      jadoreData.prixPoche[s].semaine = Math.round(appState.resultats[s].prixSejours.booking.pocheSemaine);
+    }
   });
 
   // Sauvegarder

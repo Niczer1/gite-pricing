@@ -508,6 +508,14 @@ td {
   color: var(--text-muted);
 }
 
+/* Prix théorique barré (plein tarif avant réduction) */
+.prix-theorique {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  font-size: 0.85em;
+  margin-right: 0.25rem;
+}
+
 /* Cellules "en poche" */
 .poche-cell {
   background-color: #f0fdf4;
