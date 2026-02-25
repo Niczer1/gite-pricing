@@ -195,6 +195,127 @@ body {
   font-weight: 500;
 }
 
+/* Commission calculator - row with gear icon */
+.commission-row {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.commission-row .input-with-unit {
+  flex: 1;
+}
+
+.btn-calc-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  background: none;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.btn-calc-toggle:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.btn-calc-toggle.active {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: rgba(37, 99, 235, 0.1);
+}
+
+.btn-calc-toggle svg {
+  transition: transform 0.3s;
+}
+
+.btn-calc-toggle.active svg {
+  transform: rotate(90deg);
+}
+
+/* Commission calculator panel */
+.commission-calc-panel {
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  border-left: 3px solid var(--color-primary);
+}
+
+#calc-panel-booking {
+  border-left-color: var(--color-booking);
+}
+
+#calc-panel-airbnb {
+  border-left-color: var(--color-airbnb);
+}
+
+#calc-panel-natuurhuisje {
+  border-left-color: var(--color-natuurhuisje);
+}
+
+.calc-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.calc-field label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 0.15rem;
+}
+
+.calc-field .input-with-unit input {
+  font-size: 0.85rem;
+}
+
+.calc-result {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.5rem;
+  background: white;
+  border-radius: 4px;
+  border: 1px solid var(--border-color);
+}
+
+.calc-result-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.calc-result-value {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.btn-calc-apply {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.btn-calc-apply:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 select {
   width: 100%;
   padding: 0.5rem 0.75rem;

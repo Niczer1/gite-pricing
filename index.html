@@ -56,23 +56,116 @@
           <h3>Commissions</h3>
           <div class="input-group">
             <label for="commission-booking">Booking</label>
-            <div class="input-with-unit">
-              <input type="number" id="commission-booking" value="13.25" min="0" max="100" step="0.01">
-              <span class="unit">%</span>
+            <div class="commission-row">
+              <div class="input-with-unit">
+                <input type="number" id="commission-booking" value="13.25" min="0" max="100" step="0.01">
+                <span class="unit">%</span>
+              </div>
+              <button type="button" class="btn-calc-toggle" data-platform="booking" title="Calculer la commission">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.902 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="commission-calc-panel" id="calc-panel-booking" style="display: none;">
+              <div class="calc-inputs">
+                <div class="calc-field">
+                  <label>Prix client</label>
+                  <div class="input-with-unit">
+                    <input type="number" id="calc-prix-client-booking" min="0" step="0.01" placeholder="Ex: 1 000">
+                    <span class="unit">&euro;</span>
+                  </div>
+                </div>
+                <div class="calc-field">
+                  <label>Prix re&ccedil;u</label>
+                  <div class="input-with-unit">
+                    <input type="number" id="calc-prix-recu-booking" min="0" step="0.01" placeholder="Ex: 870">
+                    <span class="unit">&euro;</span>
+                  </div>
+                </div>
+              </div>
+              <div class="calc-result">
+                <span class="calc-result-label">Commission calcul&eacute;e :</span>
+                <span class="calc-result-value" id="calc-result-booking">-- %</span>
+              </div>
+              <button type="button" class="btn btn-calc-apply" data-platform="booking" disabled>Appliquer</button>
             </div>
           </div>
           <div class="input-group">
             <label for="commission-airbnb">Airbnb</label>
-            <div class="input-with-unit">
-              <input type="number" id="commission-airbnb" value="18.76" min="0" max="100" step="0.01">
-              <span class="unit">%</span>
+            <div class="commission-row">
+              <div class="input-with-unit">
+                <input type="number" id="commission-airbnb" value="18.76" min="0" max="100" step="0.01">
+                <span class="unit">%</span>
+              </div>
+              <button type="button" class="btn-calc-toggle" data-platform="airbnb" title="Calculer la commission">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.902 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="commission-calc-panel" id="calc-panel-airbnb" style="display: none;">
+              <div class="calc-inputs">
+                <div class="calc-field">
+                  <label>Prix client</label>
+                  <div class="input-with-unit">
+                    <input type="number" id="calc-prix-client-airbnb" min="0" step="0.01" placeholder="Ex: 1 000">
+                    <span class="unit">&euro;</span>
+                  </div>
+                </div>
+                <div class="calc-field">
+                  <label>Prix re&ccedil;u</label>
+                  <div class="input-with-unit">
+                    <input type="number" id="calc-prix-recu-airbnb" min="0" step="0.01" placeholder="Ex: 810">
+                    <span class="unit">&euro;</span>
+                  </div>
+                </div>
+              </div>
+              <div class="calc-result">
+                <span class="calc-result-label">Commission calcul&eacute;e :</span>
+                <span class="calc-result-value" id="calc-result-airbnb">-- %</span>
+              </div>
+              <button type="button" class="btn btn-calc-apply" data-platform="airbnb" disabled>Appliquer</button>
             </div>
           </div>
           <div class="input-group">
             <label for="commission-natuurhuisje">Natuurhuisje</label>
-            <div class="input-with-unit">
-              <input type="number" id="commission-natuurhuisje" value="12" min="0" max="100" step="0.01">
-              <span class="unit">%</span>
+            <div class="commission-row">
+              <div class="input-with-unit">
+                <input type="number" id="commission-natuurhuisje" value="12" min="0" max="100" step="0.01">
+                <span class="unit">%</span>
+              </div>
+              <button type="button" class="btn-calc-toggle" data-platform="natuurhuisje" title="Calculer la commission">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor">
+                  <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                  <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.902 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="commission-calc-panel" id="calc-panel-natuurhuisje" style="display: none;">
+              <div class="calc-inputs">
+                <div class="calc-field">
+                  <label>Prix client</label>
+                  <div class="input-with-unit">
+                    <input type="number" id="calc-prix-client-natuurhuisje" min="0" step="0.01" placeholder="Ex: 1 000">
+                    <span class="unit">&euro;</span>
+                  </div>
+                </div>
+                <div class="calc-field">
+                  <label>Prix re&ccedil;u</label>
+                  <div class="input-with-unit">
+                    <input type="number" id="calc-prix-recu-natuurhuisje" min="0" step="0.01" placeholder="Ex: 880">
+                    <span class="unit">&euro;</span>
+                  </div>
+                </div>
+              </div>
+              <div class="calc-result">
+                <span class="calc-result-label">Commission calcul&eacute;e :</span>
+                <span class="calc-result-value" id="calc-result-natuurhuisje">-- %</span>
+              </div>
+              <button type="button" class="btn btn-calc-apply" data-platform="natuurhuisje" disabled>Appliquer</button>
             </div>
           </div>
         </div>
