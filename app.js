@@ -747,6 +747,9 @@ function afficherTableauRecapPoche() {
     { key: 'weekend', label: 'Weekend' },
     { key: 'longweekend', label: 'Long Weekend' },
     { key: 'midweek', label: 'Midweek' },
+    { key: '1nuitMidweek', label: '1N Midweek' },
+    { key: '2nuitsMidweek', label: '2N Midweek' },
+    { key: '3nuitsMidweek', label: '3N Midweek' },
     { key: 'semaine', label: 'Semaine' }
   ];
 
@@ -755,6 +758,15 @@ function afficherTableauRecapPoche() {
     let total = 0;
     PLATEFORMES.forEach(p => {
       total += resultats[saison].prixSejours[p].pocheSemaine;
+    });
+    return Math.round(total / PLATEFORMES.length);
+  }
+
+  // Calculer la moyenne du poche estimations midweek sur les 3 plateformes
+  function pocheEstimationMoyenne(saison, estimationId) {
+    let total = 0;
+    PLATEFORMES.forEach(p => {
+      total += resultats[saison].estimations[p][estimationId].poche;
     });
     return Math.round(total / PLATEFORMES.length);
   }
@@ -772,15 +784,21 @@ function afficherTableauRecapPoche() {
 
   ['bs', 'ms', 'hs'].forEach(saison => {
     const poche = appState.prixPoche[saison];
-    const pocheSem = pocheSemaineMoyenne(saison);
+
+    const valeurs = {
+      weekend: poche.weekend,
+      longweekend: poche.longweekend,
+      midweek: poche.midweek,
+      '1nuitMidweek': pocheEstimationMoyenne(saison, '1nuitMidweek'),
+      '2nuitsMidweek': pocheEstimationMoyenne(saison, '2nuitsMidweek'),
+      '3nuitsMidweek': pocheEstimationMoyenne(saison, '3nuitsMidweek'),
+      semaine: pocheSemaineMoyenne(saison)
+    };
 
     html += `
       <tr>
         <td><strong>${SAISONS[saison]}</strong></td>
-        <td>${formatPrix(poche.weekend)}</td>
-        <td>${formatPrix(poche.longweekend)}</td>
-        <td>${formatPrix(poche.midweek)}</td>
-        <td>${formatPrix(pocheSem)}</td>
+        ${sejours.map(s => `<td>${formatPrix(valeurs[s.key])}</td>`).join('')}
       </tr>
     `;
   });
@@ -788,7 +806,7 @@ function afficherTableauRecapPoche() {
   html += `
       </tbody>
     </table>
-    <p class="table-note">Semaine : moyenne arrondie des 3 plateformes (varie légèrement selon la commission)</p>
+    <p class="table-note">1N, 2N, 3N Midweek et Semaine : moyenne arrondie des 3 plateformes (varie légèrement selon la commission)</p>
   `;
 
   container.innerHTML = html;
@@ -901,14 +919,25 @@ function generateTextReport() {
 
   // Tableau récapitulatif en poche
   text += 'RÉCAPITULATIF EN POCHE\n';
-  text += '-'.repeat(50) + '\n';
-  text += `${''.padEnd(18)}${'Weekend'.padStart(10)}${'Long WE'.padStart(10)}${'Midweek'.padStart(10)}${'Semaine'.padStart(10)}\n`;
+  text += '-'.repeat(80) + '\n';
+  text += `${''.padEnd(18)}${'Weekend'.padStart(10)}${'Long WE'.padStart(10)}${'Midweek'.padStart(10)}${'1N Mid.'.padStart(10)}${'2N Mid.'.padStart(10)}${'3N Mid.'.padStart(10)}${'Semaine'.padStart(10)}\n`;
   ['bs', 'ms', 'hs'].forEach(saison => {
     const poche = appState.prixPoche[saison];
     let pocheSemTotal = 0;
-    PLATEFORMES.forEach(p => { pocheSemTotal += appState.resultats[saison].prixSejours[p].pocheSemaine; });
+    let poche1NTotal = 0;
+    let poche2NTotal = 0;
+    let poche3NTotal = 0;
+    PLATEFORMES.forEach(p => {
+      pocheSemTotal += appState.resultats[saison].prixSejours[p].pocheSemaine;
+      poche1NTotal += appState.resultats[saison].estimations[p]['1nuitMidweek'].poche;
+      poche2NTotal += appState.resultats[saison].estimations[p]['2nuitsMidweek'].poche;
+      poche3NTotal += appState.resultats[saison].estimations[p]['3nuitsMidweek'].poche;
+    });
     const pocheSem = Math.round(pocheSemTotal / PLATEFORMES.length);
-    text += `  ${SAISONS[saison].padEnd(16)}${formatPrix(poche.weekend).padStart(10)}${formatPrix(poche.longweekend).padStart(10)}${formatPrix(poche.midweek).padStart(10)}${formatPrix(pocheSem).padStart(10)}\n`;
+    const poche1N = Math.round(poche1NTotal / PLATEFORMES.length);
+    const poche2N = Math.round(poche2NTotal / PLATEFORMES.length);
+    const poche3N = Math.round(poche3NTotal / PLATEFORMES.length);
+    text += `  ${SAISONS[saison].padEnd(16)}${formatPrix(poche.weekend).padStart(10)}${formatPrix(poche.longweekend).padStart(10)}${formatPrix(poche.midweek).padStart(10)}${formatPrix(poche1N).padStart(10)}${formatPrix(poche2N).padStart(10)}${formatPrix(poche3N).padStart(10)}${formatPrix(pocheSem).padStart(10)}\n`;
   });
   text += '\n';
 
@@ -960,13 +989,24 @@ function exportCSV() {
 
   // Récapitulatif en poche
   csv += '\nRécapitulatif en poche\n';
-  csv += 'Saison;Weekend;Long Weekend;Midweek;Semaine\n';
+  csv += 'Saison;Weekend;Long Weekend;Midweek;1N Midweek;2N Midweek;3N Midweek;Semaine\n';
   ['bs', 'ms', 'hs'].forEach(saison => {
     const poche = appState.prixPoche[saison];
     let pocheSemTotal = 0;
-    PLATEFORMES.forEach(p => { pocheSemTotal += appState.resultats[saison].prixSejours[p].pocheSemaine; });
+    let poche1NTotal = 0;
+    let poche2NTotal = 0;
+    let poche3NTotal = 0;
+    PLATEFORMES.forEach(p => {
+      pocheSemTotal += appState.resultats[saison].prixSejours[p].pocheSemaine;
+      poche1NTotal += appState.resultats[saison].estimations[p]['1nuitMidweek'].poche;
+      poche2NTotal += appState.resultats[saison].estimations[p]['2nuitsMidweek'].poche;
+      poche3NTotal += appState.resultats[saison].estimations[p]['3nuitsMidweek'].poche;
+    });
     const pocheSem = Math.round(pocheSemTotal / PLATEFORMES.length);
-    csv += `${SAISONS[saison]};${poche.weekend};${poche.longweekend};${poche.midweek};${pocheSem}\n`;
+    const poche1N = Math.round(poche1NTotal / PLATEFORMES.length);
+    const poche2N = Math.round(poche2NTotal / PLATEFORMES.length);
+    const poche3N = Math.round(poche3NTotal / PLATEFORMES.length);
+    csv += `${SAISONS[saison]};${poche.weekend};${poche.longweekend};${poche.midweek};${poche1N};${poche2N};${poche3N};${pocheSem}\n`;
   });
 
   // Télécharger le fichier
