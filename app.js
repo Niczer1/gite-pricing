@@ -187,6 +187,91 @@ function initializeEventListeners() {
       calculer();
     });
   });
+
+  // Commission calculator - toggle panels
+  document.querySelectorAll('.btn-calc-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const platform = btn.dataset.platform;
+      const panel = document.getElementById(`calc-panel-${platform}`);
+      const isVisible = panel.style.display !== 'none';
+
+      // Close all panels first
+      document.querySelectorAll('.commission-calc-panel').forEach(p => {
+        p.style.display = 'none';
+      });
+      document.querySelectorAll('.btn-calc-toggle').forEach(b => {
+        b.classList.remove('active');
+      });
+
+      // Toggle this panel
+      if (!isVisible) {
+        panel.style.display = 'block';
+        btn.classList.add('active');
+      }
+    });
+  });
+
+  // Commission calculator - auto-compute on input
+  PLATEFORMES.forEach(platform => {
+    const inputClient = document.getElementById(`calc-prix-client-${platform}`);
+    const inputRecu = document.getElementById(`calc-prix-recu-${platform}`);
+    const resultDisplay = document.getElementById(`calc-result-${platform}`);
+    const applyBtn = document.querySelector(`.btn-calc-apply[data-platform="${platform}"]`);
+
+    function updateCalc() {
+      const prixClient = parseFloat(inputClient.value);
+      const prixRecu = parseFloat(inputRecu.value);
+
+      if (prixClient > 0 && prixRecu >= 0 && prixRecu <= prixClient) {
+        const commission = ((prixClient - prixRecu) / prixClient) * 100;
+        const rounded = Math.round(commission * 100) / 100;
+        resultDisplay.textContent = rounded.toLocaleString('fr-FR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        }) + ' %';
+        resultDisplay.dataset.value = rounded;
+        applyBtn.disabled = false;
+      } else {
+        resultDisplay.textContent = '-- %';
+        delete resultDisplay.dataset.value;
+        applyBtn.disabled = true;
+      }
+    }
+
+    inputClient.addEventListener('input', updateCalc);
+    inputRecu.addEventListener('input', updateCalc);
+  });
+
+  // Commission calculator - apply calculated value
+  document.querySelectorAll('.btn-calc-apply').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const platform = btn.dataset.platform;
+      const resultDisplay = document.getElementById(`calc-result-${platform}`);
+      const value = parseFloat(resultDisplay.dataset.value);
+
+      if (!isNaN(value)) {
+        const commissionInput = document.getElementById(`commission-${platform}`);
+        commissionInput.value = value;
+
+        // Trigger existing change flow
+        readFormValues();
+        saveToStorage();
+        calculer();
+
+        // Visual feedback
+        commissionInput.style.transition = 'background-color 0.3s';
+        commissionInput.style.backgroundColor = '#dcfce7';
+        setTimeout(() => {
+          commissionInput.style.backgroundColor = '';
+        }, 1500);
+
+        // Close the calculator panel
+        const panel = document.getElementById(`calc-panel-${platform}`);
+        panel.style.display = 'none';
+        document.querySelector(`.btn-calc-toggle[data-platform="${platform}"]`).classList.remove('active');
+      }
+    });
+  });
 }
 
 // Changer d'onglet
