@@ -513,7 +513,6 @@ function afficherResultats() {
   if (!appState.resultats) return;
 
   ['bs', 'ms', 'hs'].forEach(saison => {
-    afficherTableauNuit(saison);
     afficherTableauSejour(saison);
     afficherTableauEstimations(saison);
   });
