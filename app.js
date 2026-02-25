@@ -428,6 +428,7 @@ function afficherResultats() {
   if (!appState.resultats) return;
 
   ['bs', 'ms', 'hs'].forEach(saison => {
+    afficherTableauNuit(saison);
     afficherTableauSejour(saison);
     afficherTableauEstimations(saison);
   });
@@ -448,6 +449,48 @@ function formatPrixAvecTheorique(prix, theorique, hasReduction) {
     return `<span class="prix-theorique">${formatPrix(theorique)}</span> ${formatPrix(prix)}`;
   }
   return formatPrix(prix);
+}
+
+// Afficher le tableau des prix par nuit
+function afficherTableauNuit(saison) {
+  const data = appState.resultats[saison];
+  const container = document.getElementById(`table-nuit-${saison}`);
+
+  const html = `
+    <table>
+      <thead>
+        <tr>
+          <th>${SAISONS[saison]}</th>
+          <th class="platform-booking">Booking</th>
+          <th class="platform-airbnb">Airbnb</th>
+          <th class="platform-natuurhuisje">Natuurhuisje</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Lundi - Jeudi</td>
+          <td>${formatPrix(data.prixParNuit.booking.lunJeu)}</td>
+          <td>${formatPrix(data.prixParNuit.airbnb.lunJeu)}</td>
+          <td>${formatPrix(data.prixParNuit.natuurhuisje.lunJeu)}</td>
+        </tr>
+        <tr>
+          <td>Vendredi - Samedi</td>
+          <td>${formatPrix(data.prixParNuit.booking.venSam)}</td>
+          <td>${formatPrix(data.prixParNuit.airbnb.venSam)}</td>
+          <td>${formatPrix(data.prixParNuit.natuurhuisje.venSam)}</td>
+        </tr>
+        <tr>
+          <td>Dimanche</td>
+          <td>${formatPrix(data.prixParNuit.booking.dimanche)}</td>
+          <td>${formatPrix(data.prixParNuit.airbnb.dimanche)}</td>
+          <td>${formatPrix(data.prixParNuit.natuurhuisje.dimanche)}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="table-note">Nettoyage inclus dans les prix: ${appState.nettoyage}€</p>
+  `;
+
+  container.innerHTML = html;
 }
 
 // Afficher le tableau des séjours
